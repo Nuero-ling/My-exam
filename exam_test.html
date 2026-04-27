@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能测试平台“全员AI学习”——4月份考试题库</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* 左侧导航栏 */
+        .sidebar {
+            width: 280px;
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .sidebar-header h2 {
+            margin: 0;
+            font-size: 18px;
+            color: var(--primary-color);
+        }
+
+        .nav-grid-container {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .nav-item {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            color: var(--text-sub);
+        }
+
+        .nav-item:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* 导航状态样式 */
+        .nav-item.active {
+            background-color: #eff6ff;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+        }
+
+        .nav-item.answered-correct {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+        }
+
+        .nav-item.answered-wrong {
+            background-color: var(--error-color);
+            border-color: var(--error-color);
+            color: white;
+        }
+
+        .nav-item.answered-correct.active, 
+        .nav-item.answered-wrong.active {
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1) inset;
+        }
+
+        /* 右侧主体区域 */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 30px;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .progress-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-sub);
+        }
+
+        .quiz-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            background: #dbeafe;
+            color: var(--primary-color);
+        }
+
+        .question-title {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 未答题时的悬浮效果 */
+        .option-item.selectable:hover {
+            border-color: var(--primary-color);
+            background: #f0f7ff;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary-color);
+            background: #eff6ff;
+        }
+
+        .option-item.correct {
+            border-color: var(--success-color);
+            background: #ecfdf5;
+        }
+
+        .option-item.wrong {
+            border-color: var(--error-color);
+            background: #fef2f2;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn.outline {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .explanation-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f1f5f9;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 4px;
+            display: none;
+        }
+
+        .result-summary {
+            text-align: center;
+            display: none;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            padding: 20px;
+            border-radius: 12px;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: 200px;
+                flex-shrink: 0;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .nav-grid-container {
+                padding: 10px;
+            }
+            .main-content {
+                padding: 15px;
+            }
+            .quiz-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <h2>答题卡导航</h2>
+        <div style="font-size: 12px; color: var(--text-sub); margin-top: 5px;">
+            已答：<span id="answered-count">0</span> / 50
+        </div>
+    </div>
+    <div class="nav-grid-container">
+        <div class="nav-grid" id="nav-grid">
+            </div>
+    </div>
+</aside>
+
+<main class="main-content">
+    <div class="container">
+        <header>
+            <h1 style="margin:0; font-size: 24px;">智能测试平台“全员AI学习”——4月份考试题库</h1>
+            <div class="progress-text" id="counter">第 1 题</div>
+        </header>
+
+        <div id="quiz-area" class="quiz-card">
+            </div>
+
+        <div id="result-area" class="quiz-card result-summary">
+            <h2>🎉 练习完成！</h2>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div style="color: var(--success-color); font-size: 32px; font-weight: bold;" id="correct-count">0</div>
+                    <div>正确题数</div>
+                </div>
+                <div class="stat-item">
+                    <div style="color: var(--error-color); font-size: 32px; font-weight: bold;" id="wrong-count">0</div>
+                    <div>错误题数</div>
+                </div>
+            </div>
+            <button class="btn" onclick="location.reload()">重新开始测验</button>
+        </div>
+    </div>
+</main>
+
+<script>
+// 完整题库数据
+const quizData = [
+    // --- 单选题 ---
+    { type: 'single', q: '2026 年全球顶尖 AI 实验室与科技巨头重点押注的 AI 新算法路径是()', options: {A:'大语言模型', B:'世界模型', C:'卷积神经网络', D:'Transformer 模型'}, ans: 'B', exp: '2026 年 AI 领域的核心研发方向转向世界模型。' },
+    { type: 'single', q: '世界模型被视为 AI 未来发展的核心方向,主要原因是大语言模型的哪一规律面临发展质疑()', options: {A:'迁移学习规律', B:'ScalingLaw(缩放定律)', C:'泛化能力规律', D:'多模态融合规律'}, ans: 'B', exp: 'ScalingLaw(缩放定律)在 2026 年面临发展瓶颈与质疑。' },
+    { type: 'single', q: '世界模型的核心能力是让 AI 实现()', options: {A:'文本生成与对话', B:'预测与推演真实世界', C:'图像分类与识别', D:'语音合成与翻译'}, ans: 'B', exp: '世界模型定位是让 AI 具备对真实世界的预测、推演能力。' },
+    { type: 'single', q: '世界模型研究转向的重要背景之一是大语言模型在继续"堆参数/数据/算力"上的收益出现瓶颈,这一现象通常被概括为()', options: {A:'EmergentAbility(涌现能力)', B:'ScalingLaw(缩放定律)受限', C:'MoE(专家混合)必然失败', D:'RLHF(人类反馈强化学习)失效'}, ans: 'B', exp: 'ScalingLaw 受限是转向世界模型研究的核心原因。' },
+    { type: 'single', q: '世界模型拥有标准的研发结构,其结构层数为()', options: {A:'三层:感知层/表征(世界状态)层/预测推演层', B:'三层:数据采集层/数据标注层/数据清洗层', C:'三层:检索层/生成层/评估层', D:'三层:前端层/后端层/数据库层'}, ans: 'A', exp: '三层结构指感知层、表征层与预测推演层。' },
+    { type: 'single', q: '以下不属于世界模型主流技术路线的是()', options: {A:'视频生成路线', B:'3D 空间智能路线', C:'纯文本大模型路线', D:'JEPA 抽象预测路线'}, ans: 'C', exp: '纯文本属于传统大模型，不属于世界模型。' },
+    { type: 'single', q: 'HarnessEngineering(驾驭工程)主要关注的是什么?()', options: {A:'开发更强大的 AI 模型', B:'为 AI 模型设计提示词(Prompt)', C:'为 AI 智能体(Agent)构建可靠、可控的运行环境与系统', D:'训练 AI 模型处理特定任务'}, ans: 'C', exp: '核心是构建可靠、可控、可落地的系统。' },
+    { type: 'single', q: 'HarnessEngineering 通常通过构建外部系统来提升 AI 落地的可靠性,下列哪项最能体现"闭环验证与修正"的思想?()', options: {A:'让模型自由生成,不做任何检查', B:'输出后由验证器检查,不合格则回退/重试/修正再输出', C:'只扩大模型参数规模', D:'只增加提示词长度'}, ans: 'B', exp: '强调验证与修正系统形成反馈闭环。' },
+    { type: 'single', q: 'HarnessEngineering 旨在解决大模型的哪个固有缺陷?()', options: {A:'计算速度太慢', B:'训练成本过高', C:'输出具有概率性,行为不可预测', D:'无法进行数学计算'}, ans: 'C', exp: 'AI 为概率模型，输出具有不确定性。' },
+    { type: 'single', q: '一个完整的 Harness(驾驭系统)通常不包括以下哪个部分?()', options: {A:'约束系统(规定 AI 能做什么)', B:'信息系统(确保 AI 知道该知道的一切)', C:'模型训练系统(从零开始训练新模型)', D:'验证与修正系统(检查并纠正 AI 的输出)'}, ans: 'C', exp: 'Harness 关注“使用”模型而非“训练”模型。' },
+    { type: 'single', q: 'AgentSkill(智能体技能)本质上是什么?()', options: {A:'一种新的 AI 大语言模型', B:'一个让 AI 模型变得更聪明的训练算法', C:'一个包含指令、脚本和资源的模块化"能力包"文件夹', D:'一种用于连接外部数据库的网络协议'}, ans: 'C', exp: 'AgentSkill 本质是工程化能力封装。' },
+    { type: 'single', q: '一个标准的 AgentSkill 文件夹中,哪个文件是必需的?()', options: {A:'script.py', B:'README.txt', C:'SKILL.md', D:'config.json'}, ans: 'C', exp: '标准 AgentSkill 必需文件为 SKILL.md。' },
+    { type: 'single', q: 'AgentSkill 最核心的创新机制是什么?()', options: {A:'反向传播训练', B:'强化学习奖励', C:'渐进式披露(ProgressiveDisclosure)', D:'迁移学习'}, ans: 'C', exp: '核心机制为渐进式披露。' },
+    { type: 'single', q: '在"渐进式披露"机制中,AI 智能体启动时首先加载的是什么?()', options: {A:'所有技能的完整指令文档', B:'所有可执行脚本的代码', C:'每个技能的元数据(名称和描述)', D:'所有参考资源文件'}, ans: 'C', exp: '第一层在启动时加载技能元数据。' },
+    { type: 'single', q: 'ModelContextProtocol(MCP)被比喻为 AI 时代的"USB 接口",那么 AgentSkill 被比喻为什么?()', options: {A:'电脑主机', B:'通用驱动程序', C:'操作系统', D:'应用程序'}, ans: 'D', exp: 'MCP是接口，Skill是具体的应用功能模块。' },
+    { type: 'single', q: 'AI 智能体用于执行特定专项任务的标准化能力单元是()', options: {A:'Skill', B:'RAG', C:'MCP', D:'Transformer'}, ans: 'A', exp: 'Skill 是 AI 智能体执行专项任务的单元。' },
+    { type: 'single', q: 'RAG 技术在大模型与智能体体系中的核心作用是()', options: {A:'检索外部知识增强内容生成', B:'仅依靠模型内置记忆生成内容', C:'实现高清图像生成', D:'完成语音合成与转换'}, ans: 'A', exp: 'RAG 通过检索外部知识增强生成，解决知识过时问题。' },
+    { type: 'single', q: 'OpenClaw 在 AI 技术体系中的核心定位是()', options: {A:'AI 智能体(Agent)', B:'基础大语言模型', C:'关系型数据库', D:'传统办公软件'}, ans: 'A', exp: 'OpenClaw 定位为 AI 智能体 (Agent)。' },
+    { type: 'single', q: 'MCP 在 AI 智能体生态中主要承担的角色是()', options: {A:'通信与协作协议', B:'核心推理模型', C:'数据存储工具', D:'视频剪辑软件'}, ans: 'A', exp: 'MCP 承担通信与协作协议角色。' },
+    { type: 'single', q: '具备自主感知、决策、执行复杂任务能力的 AI 核心主体是()', options: {A:'Agent', B:'Skill', C:'RAG', D:'MCP'}, ans: 'A', exp: 'Agent 是具备自主感知、决策等能力的主体。' },
+    { type: 'single', q: 'OpenClaw 在 AI 圈被大众通俗称呼为()', options: {A:'小龙虾', B:'小螃蟹', C:'小鲨鱼', D:'小海豚'}, ans: 'A', exp: '俗称“小龙虾”。' },
+    { type: 'single', q: 'OpenClaw 引发 AI 圈广泛热议的核心优势是()', options: {A:'游戏娱乐功能', B:'智能体自动化执行能力', C:'视频剪辑功能', D:'图片美化效果'}, ans: 'B', exp: '核心优势在于自动化执行。' },
+    { type: 'single', q: '与 OpenClaw 技术关联密切的代码专用模型是()', options: {A:'ClaudeCode', B:'Photoshop', C:'Word', D:'Excel'}, ans: 'A', exp: '关联密切的模型是 ClaudeCode。' },
+    { type: 'single', q: 'OpenClaw 长期记忆优化的基础方案中,保存项目背景与个人偏好的主要方式是?()', options: {A:'通过项目级 MEMORY.md 与全局 preferences.yaml 文件', B:'直接启用原生内存搜索', C:'安装并配置 MEM0 插件', D:'搭建 SQLite 数据库'}, ans: 'A', exp: '纯文本持久化方案。' },
+    { type: 'single', q: '搭建完整且稳定的 OpenClaw 持久记忆架构,最合理的实施方式是?()', options: {A:'仅使用基础 Markdown 文件', B:'仅依靠原生内存搜索', C:'仅采用 SQLite 数据库', D:'多种记忆方案组合搭配使用'}, ans: 'D', exp: '组合搭配可兼顾静态信息、语义检索与结构化存储。' },
+    { type: 'single', q: '想要实现 OpenClaw 自动化记忆管理,完成语义化矢量记忆检索,推荐使用的工具是?()', options: {A:'LanceDB', B:'MEM0 插件', C:'OpenViking', D:'SQLite'}, ans: 'B', exp: 'MEM0 用于自动化语义化矢量记忆检索。' },
+    { type: 'single', q: '在 OpenClaw 长期记忆优化的高阶技巧中,用于存储复杂结构化数据的方式是?()', options: {A:'Markdown 文档', B:'原生内存搜索', C:'MEM0 插件', D:'SQLite 数据库'}, ans: 'D', exp: 'SQLite 适合结构化存储。' },
+    { type: 'single', q: '大模型处理人类文字时,用于将文本转换为机器可识别数字的核心工具是()', options: {A:'Tokenizer', B:'Photoshop', C:'Word', D:'Excel'}, ans: 'A', exp: 'Tokenizer 负责转换 Token/数字序列。' },
+    { type: 'single', q: 'Tokenizer 训练过程中,用于合并字符、构建词表的核心算法是()', options: {A:'BPE 算法', B:'冒泡排序', C:'二分查找', D:'递归算法'}, ans: 'A', exp: '核心算法是 BPE。' },
+    { type: 'single', q: '大模型的计费、上下文长度限制,均以哪种单位为核心标准()', options: {A:'汉字个数', B:'单词个数', C:'Token 数量', D:'字符个数'}, ans: 'C', exp: '计量标准是 Token 数量。' },
+
+    // --- 判断题 ---
+    { type: 'boolean', q: '世界模型被普遍认为是迈向人工通用智能(AGI)的关键一步。', ans: '√', exp: '世界模型是迈向 AGI 的重要路径。' },
+    { type: 'boolean', q: '世界模型的核心是让 AI 通过观测环境、构建虚拟世界规则,从而自主预测未来状态并做出决策,而非仅执行固定指令。', ans: '√', exp: '本质是学习动态规律具备规划能力。' },
+    { type: 'boolean', q: '世界模型的核心是让 AI 不仅能"看见"世界,还能推演世界。', ans: '√', exp: '从“看见”升级到“推演”。' },
+    { type: 'boolean', q: 'HarnessEngineering 的中文常被翻译为"驾驭工程"或"围栏工程"。', ans: '√', exp: '常见翻译。' },
+    { type: 'boolean', q: 'HarnessEngineering 的核心是为 AI 智能体构建一套完整的运行环境、约束规则与反馈闭环。', ans: '√', exp: '强调运行环境与闭环。' },
+    { type: 'boolean', q: 'AgentSkill 是由 AI 公司 Anthropic 于 2025 年 10 月正式推出的。', ans: '√', exp: '时间背景正确。' },
+    { type: 'boolean', q: '在 Skill 的 SKILL.md 文件中,开头的部分用于定义技能的名称和描述,其格式是 YAML。', ans: '√', exp: '开头采用 YAML 元数据。' },
+    { type: 'boolean', q: '与主要解决 AI"连接"外部工具问题的 MCP 不同,AgentSkill 主要定义了 AI 该如何使用这些工具来完成复杂业务流程。', ans: '√', exp: 'MCP解决连接，Skill定义流程。' },
+    { type: 'boolean', q: 'RAG 的中文全称是检索增强生成,核心是通过外部检索增强模型生成能力。', ans: '√', exp: 'RAG 定义。' },
+    { type: 'boolean', q: 'OpenClaw 是基于 Agent(智能体)架构打造的自动化执行 AI 智能体工具。', ans: '√', exp: '功能定义正确。' },
+    { type: 'boolean', q: '大模型的上下文窗口长度,其计量单位是 Token。', ans: '√', exp: '计量单位是 Token。' },
+    { type: 'boolean', q: 'Tokenizer 训练过程中,用于自动合并字符的核心算法是 BPE 算法。', ans: '√', exp: '核心合并算法为 BPE。' },
+
+    // --- 多选题 ---
+    { type: 'multi', q: '以下关于世界模型的说法,正确的有()', options: {A:'世界模型强调对真实世界的预测与推演能力', B:'世界模型的研究转向与大语言模型 ScalingLaw 受限有关', C:'世界模型被认为是迈向 AGI 的重要路径之一', D:'世界模型的主流路线之一包含 3D 空间智能'}, ans: 'ABCD', exp: '四项均符合世界模型特征。' },
+    { type: 'multi', q: '以下积极投入世界模型研发的科技巨头与机构有()', options: {A:'OpenAI', B:'谷歌', C:'Meta', D:'传统零售企业'}, ans: 'ABC', exp: '头部科技公司积极投入，传统零售非研发主体。' },
+    { type: 'multi', q: '以下哪些被描述为 Harness(驾驭系统)的组成部分或比喻?()', options: {A:'缰绳(对应提示词工程)', B:'马鞍(对应 RAG 插件)', C:'马镫(对应闭环的沙盒执行环境)', D:'引擎(对应 AI 大模型本身)'}, ans: 'ABC', exp: '缰绳、马鞍、马镫是马具比喻，引擎不属于马具。' },
+    { type: 'multi', q: '成为一名 HarnessEngineer(驾驭工程师),需要具备哪些新的核心能力?()', options: {A:'项目管理与交付能力', B:'沟通与协作能力,连接业务、产品与技术', C:'商业思维与理解客户需求的能力', D:'从零开始编写所有代码的能力'}, ans: 'ABC', exp: '不需要从零写代码，更强调连接与理解能力。' },
+    { type: 'multi', q: '一个完整的 AgentSkill 文件夹可能包含以下哪些部分?()', options: {A:'SKILL.md(核心指令文件)', B:'scripts/目录', C:'references/目录', D:'assets/目录'}, ans: 'ABCD', exp: '完整的 Skill 文件夹可包含以上所有。' },
+    { type: 'multi', q: '关于"渐进式披露"机制的三层加载,以下描述正确的是?()', options: {A:'第一层(元数据):消耗 Token 极少', B:'第二层(指令):加载完整操作指南', C:'第三层(资源):按需加载详细文档或脚本', D:'该机制要求一次性将所有技能全部加载'}, ans: 'ABC', exp: '渐进式披露是按需加载，而非一次性全部加载。' },
+    { type: 'multi', q: '对 OpenClaw 长期记忆进行优化,主要能够解决的实际问题包括?()', options: {A:'对话意外中断导致信息丢失', B:'频繁调用 API 带来费用虚高', C:'本地模型部署流程过于复杂', D:'记忆信息无法持久保存'}, ans: 'ABD', exp: '优化记忆不解决本地部署流程复杂问题。' },
+    { type: 'multi', q: '下列属于 OpenClaw 长期记忆优化常用方法的有?()', options: {A:'手动构建 Markdown 文件夹', B:'使用原生内存搜索', C:'借助 MEM0 插件实现语义检索', D:'通过 SQLite 数据库结构化存储'}, ans: 'ABCD', exp: '四项均为常用记忆优化方法。' }
+];
+
+// 状态管理
+let currentIndex = 0;
+// 记录用户的答题情况。null 表示未答，否则为 { isCorrect: boolean, selectedAnswers: array }
+let questionHistory = new Array(quizData.length).fill(null);
+let selectedAnswers = [];
+
+function initQuiz() {
+    renderSidebar();
+    showQuestion();
+}
+
+// 渲染左侧导航网格
+function renderSidebar() {
+    const grid = document.getElementById('nav-grid');
+    grid.innerHTML = '';
+    
+    let answeredCount = 0;
+    let correctCount = 0;
+    let wrongCount = 0;
+
+    quizData.forEach((_, i) => {
+        const btn = document.createElement('div');
+        btn.className = 'nav-item';
+        btn.innerText = i + 1;
+        
+        // 判断状态并附加相应的类名
+        if (questionHistory[i]) {
+            answeredCount++;
+            if (questionHistory[i].isCorrect) {
+                btn.classList.add('answered-correct');
+                correctCount++;
+            } else {
+                btn.classList.add('answered-wrong');
+                wrongCount++;
+            }
+        }
+        
+        // 当前题目高亮
+        if (i === currentIndex) {
+            btn.classList.add('active');
+        }
+
+        btn.onclick = () => jumpToQuestion(i);
+        grid.appendChild(btn);
+    });
+
+    document.getElementById('answered-count').innerText = answeredCount;
+    
+    // 更新总分统计（为最后页面准备）
+    window.currentCorrect = correctCount;
+    window.currentWrong = wrongCount;
+    window.totalAnswered = answeredCount;
+}
+
+// 跳转到指定题目
+function jumpToQuestion(index) {
+    currentIndex = index;
+    // 重置当前未提交的选择
+    selectedAnswers = [];
+    renderSidebar();
+    showQuestion();
+}
+
+function showQuestion() {
+    const quizArea = document.getElementById('quiz-area');
+    const question = quizData[currentIndex];
+    const history = questionHistory[currentIndex]; // 检查这题是否已经答过
+    
+    let typeText = '';
+    if(question.type === 'single') typeText = '单选题';
+    else if(question.type === 'boolean') typeText = '判断题';
+    else typeText = '多选题';
+
+    let optionsHtml = '';
+    if(question.type === 'boolean') {
+        optionsHtml = `
+            <div class="option-item ${history ? '' : 'selectable'}" onclick="handleSelect('√')" data-key="√">
+                <strong style="margin-right:10px">√</strong> 正确
+            </div>
+            <div class="option-item ${history ? '' : 'selectable'}" onclick="handleSelect('×')" data-key="×">
+                <strong style="margin-right:10px">×</strong> 错误
+            </div>
+        `;
+    } else {
+        for(let key in question.options) {
+            optionsHtml += `
+                <div class="option-item ${history ? '' : 'selectable'}" onclick="handleSelect('${key}')" data-key="${key}">
+                    <strong style="margin-right:10px">${key}.</strong> ${question.options[key]}
+                </div>
+            `;
+        }
+    }
+
+    // 按钮逻辑：如果答过了，只显示“上一题/下一题”；如果没答，显示“提交”
+    let buttonsHtml = '';
+    if (!history) {
+        buttonsHtml = `
+            <div class="btn-group">
+                <button id="submit-btn" class="btn" onclick="checkAnswer()">提交答案</button>
+            </div>
+        `;
+    } else {
+        buttonsHtml = `<div class="btn-group">`;
+        if (currentIndex > 0) {
+            buttonsHtml += `<button class="btn outline" onclick="jumpToQuestion(currentIndex - 1)">上一题</button>`;
+        }
+        if (currentIndex < quizData.length - 1) {
+            buttonsHtml += `<button class="btn" onclick="jumpToQuestion(currentIndex + 1)">下一题</button>`;
+        } else {
+            buttonsHtml += `<button class="btn" onclick="finishQuiz()">查看成绩单</button>`;
+        }
+        buttonsHtml += `</div>`;
+    }
+
+    quizArea.innerHTML = `
+        <div class="type-badge">${typeText}</div>
+        <div class="question-title">${currentIndex + 1}. ${question.q}</div>
+        <div class="options-list" id="options-container">
+            ${optionsHtml}
+        </div>
+        <div id="explanation" class="explanation-box"></div>
+        ${buttonsHtml}
+    `;
+
+    document.getElementById('counter').innerText = `第 ${currentIndex + 1} / ${quizData.length} 题`;
+
+    // 如果这题已经答过了，立刻还原当时的界面（标记对错和显示解析）
+    if (history) {
+        restoreHistoryView(question, history);
+    }
+}
+
+// 处理点击选项
+function handleSelect(val) {
+    // 如果已经答过这题，则禁止修改
+    if (questionHistory[currentIndex]) return;
+
+    const question = quizData[currentIndex];
+    const items = document.querySelectorAll('.option-item');
+    
+    if(question.type === 'multi') {
+        const index = selectedAnswers.indexOf(val);
+        if(index > -1) selectedAnswers.splice(index, 1);
+        else selectedAnswers.push(val);
+
+        items.forEach(item => {
+            const dataKey = item.getAttribute('data-key');
+            if(selectedAnswers.includes(dataKey)) item.classList.add('selected');
+            else item.classList.remove('selected');
+        });
+    } else {
+        selectedAnswers = [val];
+        items.forEach(item => {
+            item.classList.remove('selected');
+            if(item.getAttribute('data-key') === val) {
+                item.classList.add('selected');
+            }
+        });
+    }
+}
+
+// 检查答案并保存状态
+function checkAnswer() {
+    if(selectedAnswers.length === 0) {
+        alert('请先选择答案');
+        return;
+    }
+
+    const question = quizData[currentIndex];
+    const userAnswer = selectedAnswers.sort().join('');
+    const isCorrect = userAnswer === question.ans;
+
+    // 记录到历史状态中
+    questionHistory[currentIndex] = {
+        isCorrect: isCorrect,
+        selectedAnswers: [...selectedAnswers]
+    };
+
+    // 刷新左侧导航栏颜色
+    renderSidebar();
+
+    // 移除所有选项的 hover 选择反馈
+    const items = document.querySelectorAll('.option-item');
+    items.forEach(item => item.classList.remove('selectable'));
+
+    // 重新渲染当前题目状态
+    showQuestion();
+}
+
+// 还原已答题目的视图
+function restoreHistoryView(question, history) {
+    const items = document.querySelectorAll('.option-item');
+    items.forEach(item => {
+        const key = item.getAttribute('data-key');
+        
+        // 标记正确答案
+        if(question.ans.includes(key)) {
+            item.classList.add('correct');
+        } 
+        // 标记用户选错的答案
+        else if(history.selectedAnswers.includes(key)) {
+            item.classList.add('wrong');
+        }
+    });
+
+    const expBox = document.getElementById('explanation');
+    expBox.innerHTML = `
+        <strong style="color: ${history.isCorrect ? 'var(--success-color)' : 'var(--error-color)'}">
+            ${history.isCorrect ? '回答正确！' : '回答错误。'}
+        </strong><br>
+        正确答案是：<b>${question.ans}</b><br><br>
+        <strong>解析：</strong>${question.exp}
+    `;
+    expBox.style.display = 'block';
+}
+
+function finishQuiz() {
+    if (window.totalAnswered < quizData.length) {
+        if (!confirm(`你还有 ${quizData.length - window.totalAnswered}道题未答，确定要提前交卷吗？`)) {
+            return;
+        }
+    }
+    
+    document.getElementById('quiz-area').style.display = 'none';
+    document.getElementById('result-area').style.display = 'block';
+    document.getElementById('counter').innerText = '测验结束';
+    document.getElementById('correct-count').innerText = window.currentCorrect || 0;
+    document.getElementById('wrong-count').innerText = window.currentWrong || 0;
+}
+
+// 初始化
+initQuiz();
+</script>
+</body>
+</html>
