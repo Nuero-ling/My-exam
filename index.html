@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>智能测试平台“全员AI学习”——4月份考试题库</title>
+    <title>赛力斯汽车重庆社会道路、三高一湿 路试员入职考试题</title>
     <style>
         :root {
             --primary-color: #2563eb;
@@ -144,13 +144,23 @@
 
         .type-badge {
             display: inline-block;
-            padding: 4px 12px;
+            padding: 6px 16px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
             margin-bottom: 15px;
+        }
+        .type-badge.single {
             background: #dbeafe;
-            color: var(--primary-color);
+            color: #1d4ed8;
+        }
+        .type-badge.multi {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        .type-badge.boolean {
+            background: #dcfce7;
+            color: #166534;
         }
 
         .question-title {
@@ -254,6 +264,87 @@
             border: 1px solid var(--border-color);
         }
 
+        /* 封面页样式 */
+        .cover-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        .cover-content {
+            background: white;
+            padding: 40px 60px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+        }
+        .cover-content h1 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 24px;
+            line-height: 1.5;
+        }
+        .cover-content .description {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: left;
+            line-height: 1.8;
+            color: var(--text-sub);
+            font-size: 14px;
+        }
+        .cover-content .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .cover-content .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+        .cover-content .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .cover-content .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .cover-content .btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* 结果页考生信息 */
+        .result-summary .candidate-info {
+            background: #f8fafc;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .result-summary .candidate-info span {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
         /* 移动端适配 */
         @media (max-width: 768px) {
             body {
@@ -275,10 +366,35 @@
             .quiz-card {
                 padding: 20px;
             }
+            .cover-content {
+                padding: 30px 20px;
+            }
+            .cover-content h1 {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
 <body>
+
+<div id="cover-page" class="cover-page">
+    <div class="cover-content">
+        <h1>赛力斯汽车重庆社会道路、三高一湿 路试员入职考试题</h1>
+        <div class="description">
+            <strong>说明：</strong><br>
+            本题库聚焦高原、高寒、高温、高湿"三高一湿"环境路况安全，贴合路试场景，围绕公司车型功能及注意事项，适用于重庆长里程、三高环境试验路试员入职考试。
+        </div>
+        <div class="input-group">
+            <label for="candidate-name">考生姓名</label>
+            <input type="text" id="candidate-name" placeholder="请输入姓名">
+        </div>
+        <div class="input-group">
+            <label for="candidate-id">工号/身份证号</label>
+            <input type="text" id="candidate-id" placeholder="请输入工号或身份证号">
+        </div>
+        <button class="btn" onclick="startExam()">开始考试</button>
+    </div>
+</div>
 
 <aside class="sidebar">
     <div class="sidebar-header">
@@ -296,7 +412,7 @@
 <main class="main-content">
     <div class="container">
         <header>
-            <h1 style="margin:0; font-size: 24px;">智能测试平台“全员AI学习”——4月份考试题库</h1>
+            <h1 style="margin:0; font-size: 24px;">赛力斯汽车重庆社会道路、三高一湿 路试员入职考试题</h1>
             <div class="progress-text" id="counter">第 1 题</div>
         </header>
 
@@ -304,81 +420,252 @@
             </div>
 
         <div id="result-area" class="quiz-card result-summary">
-            <h2>🎉 练习完成！</h2>
+            <h2 id="result-title">考试完成！</h2>
+            <div class="candidate-info">
+                考生姓名：<span id="result-name">-</span><br>
+                工号/身份证号：<span id="result-id">-</span>
+            </div>
             <div class="stat-grid">
                 <div class="stat-item">
-                    <div style="color: var(--success-color); font-size: 32px; font-weight: bold;" id="correct-count">0</div>
-                    <div>正确题数</div>
+                    <div style="color: var(--primary-color); font-size: 32px; font-weight: bold;" id="correct-count">0</div>
+                    <div>得分</div>
                 </div>
                 <div class="stat-item">
-                    <div style="color: var(--error-color); font-size: 32px; font-weight: bold;" id="wrong-count">0</div>
-                    <div>错误题数</div>
+                    <div style="color: var(--text-sub); font-size: 32px; font-weight: bold;" id="score-percent">0</div>
+                    <div>总分</div>
                 </div>
             </div>
-            <button class="btn" onclick="location.reload()">重新开始测验</button>
+            <div id="pass-status" style="font-size: 24px; font-weight: bold; margin: 20px 0;"></div>
+            <button class="btn" onclick="location.reload()">重新开始考试</button>
         </div>
     </div>
 </main>
 
 <script>
-// 完整题库数据
-const quizData = [
+// 考生信息
+let candidateName = '';
+let candidateId = '';
+
+// 开始考试
+function startExam() {
+    const name = document.getElementById('candidate-name').value.trim();
+    const id = document.getElementById('candidate-id').value.trim();
+    
+    if (!name) {
+        alert('请输入考生姓名');
+        return;
+    }
+    if (!id) {
+        alert('请输入工号或身份证号');
+        return;
+    }
+    
+    candidateName = name;
+    candidateId = id;
+    
+    document.getElementById('cover-page').style.display = 'none';
+    initQuiz();
+}
+
+// 路试员考试题库
+const allQuizData = [
     // --- 单选题 ---
-    { type: 'single', q: '2026 年全球顶尖 AI 实验室与科技巨头重点押注的 AI 新算法路径是()', options: {A:'大语言模型', B:'世界模型', C:'卷积神经网络', D:'Transformer 模型'}, ans: 'B', exp: '2026 年 AI 领域的核心研发方向转向世界模型。' },
-    { type: 'single', q: '世界模型被视为 AI 未来发展的核心方向,主要原因是大语言模型的哪一规律面临发展质疑()', options: {A:'迁移学习规律', B:'ScalingLaw(缩放定律)', C:'泛化能力规律', D:'多模态融合规律'}, ans: 'B', exp: 'ScalingLaw(缩放定律)在 2026 年面临发展瓶颈与质疑。' },
-    { type: 'single', q: '世界模型的核心能力是让 AI 实现()', options: {A:'文本生成与对话', B:'预测与推演真实世界', C:'图像分类与识别', D:'语音合成与翻译'}, ans: 'B', exp: '世界模型定位是让 AI 具备对真实世界的预测、推演能力。' },
-    { type: 'single', q: '世界模型研究转向的重要背景之一是大语言模型在继续"堆参数/数据/算力"上的收益出现瓶颈,这一现象通常被概括为()', options: {A:'EmergentAbility(涌现能力)', B:'ScalingLaw(缩放定律)受限', C:'MoE(专家混合)必然失败', D:'RLHF(人类反馈强化学习)失效'}, ans: 'B', exp: 'ScalingLaw 受限是转向世界模型研究的核心原因。' },
-    { type: 'single', q: '世界模型拥有标准的研发结构,其结构层数为()', options: {A:'三层:感知层/表征(世界状态)层/预测推演层', B:'三层:数据采集层/数据标注层/数据清洗层', C:'三层:检索层/生成层/评估层', D:'三层:前端层/后端层/数据库层'}, ans: 'A', exp: '三层结构指感知层、表征层与预测推演层。' },
-    { type: 'single', q: '以下不属于世界模型主流技术路线的是()', options: {A:'视频生成路线', B:'3D 空间智能路线', C:'纯文本大模型路线', D:'JEPA 抽象预测路线'}, ans: 'C', exp: '纯文本属于传统大模型，不属于世界模型。' },
-    { type: 'single', q: 'HarnessEngineering(驾驭工程)主要关注的是什么?()', options: {A:'开发更强大的 AI 模型', B:'为 AI 模型设计提示词(Prompt)', C:'为 AI 智能体(Agent)构建可靠、可控的运行环境与系统', D:'训练 AI 模型处理特定任务'}, ans: 'C', exp: '核心是构建可靠、可控、可落地的系统。' },
-    { type: 'single', q: 'HarnessEngineering 通常通过构建外部系统来提升 AI 落地的可靠性,下列哪项最能体现"闭环验证与修正"的思想?()', options: {A:'让模型自由生成,不做任何检查', B:'输出后由验证器检查,不合格则回退/重试/修正再输出', C:'只扩大模型参数规模', D:'只增加提示词长度'}, ans: 'B', exp: '强调验证与修正系统形成反馈闭环。' },
-    { type: 'single', q: 'HarnessEngineering 旨在解决大模型的哪个固有缺陷?()', options: {A:'计算速度太慢', B:'训练成本过高', C:'输出具有概率性,行为不可预测', D:'无法进行数学计算'}, ans: 'C', exp: 'AI 为概率模型，输出具有不确定性。' },
-    { type: 'single', q: '一个完整的 Harness(驾驭系统)通常不包括以下哪个部分?()', options: {A:'约束系统(规定 AI 能做什么)', B:'信息系统(确保 AI 知道该知道的一切)', C:'模型训练系统(从零开始训练新模型)', D:'验证与修正系统(检查并纠正 AI 的输出)'}, ans: 'C', exp: 'Harness 关注“使用”模型而非“训练”模型。' },
-    { type: 'single', q: 'AgentSkill(智能体技能)本质上是什么?()', options: {A:'一种新的 AI 大语言模型', B:'一个让 AI 模型变得更聪明的训练算法', C:'一个包含指令、脚本和资源的模块化"能力包"文件夹', D:'一种用于连接外部数据库的网络协议'}, ans: 'C', exp: 'AgentSkill 本质是工程化能力封装。' },
-    { type: 'single', q: '一个标准的 AgentSkill 文件夹中,哪个文件是必需的?()', options: {A:'script.py', B:'README.txt', C:'SKILL.md', D:'config.json'}, ans: 'C', exp: '标准 AgentSkill 必需文件为 SKILL.md。' },
-    { type: 'single', q: 'AgentSkill 最核心的创新机制是什么?()', options: {A:'反向传播训练', B:'强化学习奖励', C:'渐进式披露(ProgressiveDisclosure)', D:'迁移学习'}, ans: 'C', exp: '核心机制为渐进式披露。' },
-    { type: 'single', q: '在"渐进式披露"机制中,AI 智能体启动时首先加载的是什么?()', options: {A:'所有技能的完整指令文档', B:'所有可执行脚本的代码', C:'每个技能的元数据(名称和描述)', D:'所有参考资源文件'}, ans: 'C', exp: '第一层在启动时加载技能元数据。' },
-    { type: 'single', q: 'ModelContextProtocol(MCP)被比喻为 AI 时代的"USB 接口",那么 AgentSkill 被比喻为什么?()', options: {A:'电脑主机', B:'通用驱动程序', C:'操作系统', D:'应用程序'}, ans: 'D', exp: 'MCP是接口，Skill是具体的应用功能模块。' },
-    { type: 'single', q: 'AI 智能体用于执行特定专项任务的标准化能力单元是()', options: {A:'Skill', B:'RAG', C:'MCP', D:'Transformer'}, ans: 'A', exp: 'Skill 是 AI 智能体执行专项任务的单元。' },
-    { type: 'single', q: 'RAG 技术在大模型与智能体体系中的核心作用是()', options: {A:'检索外部知识增强内容生成', B:'仅依靠模型内置记忆生成内容', C:'实现高清图像生成', D:'完成语音合成与转换'}, ans: 'A', exp: 'RAG 通过检索外部知识增强生成，解决知识过时问题。' },
-    { type: 'single', q: 'OpenClaw 在 AI 技术体系中的核心定位是()', options: {A:'AI 智能体(Agent)', B:'基础大语言模型', C:'关系型数据库', D:'传统办公软件'}, ans: 'A', exp: 'OpenClaw 定位为 AI 智能体 (Agent)。' },
-    { type: 'single', q: 'MCP 在 AI 智能体生态中主要承担的角色是()', options: {A:'通信与协作协议', B:'核心推理模型', C:'数据存储工具', D:'视频剪辑软件'}, ans: 'A', exp: 'MCP 承担通信与协作协议角色。' },
-    { type: 'single', q: '具备自主感知、决策、执行复杂任务能力的 AI 核心主体是()', options: {A:'Agent', B:'Skill', C:'RAG', D:'MCP'}, ans: 'A', exp: 'Agent 是具备自主感知、决策等能力的主体。' },
-    { type: 'single', q: 'OpenClaw 在 AI 圈被大众通俗称呼为()', options: {A:'小龙虾', B:'小螃蟹', C:'小鲨鱼', D:'小海豚'}, ans: 'A', exp: '俗称“小龙虾”。' },
-    { type: 'single', q: 'OpenClaw 引发 AI 圈广泛热议的核心优势是()', options: {A:'游戏娱乐功能', B:'智能体自动化执行能力', C:'视频剪辑功能', D:'图片美化效果'}, ans: 'B', exp: '核心优势在于自动化执行。' },
-    { type: 'single', q: '与 OpenClaw 技术关联密切的代码专用模型是()', options: {A:'ClaudeCode', B:'Photoshop', C:'Word', D:'Excel'}, ans: 'A', exp: '关联密切的模型是 ClaudeCode。' },
-    { type: 'single', q: 'OpenClaw 长期记忆优化的基础方案中,保存项目背景与个人偏好的主要方式是?()', options: {A:'通过项目级 MEMORY.md 与全局 preferences.yaml 文件', B:'直接启用原生内存搜索', C:'安装并配置 MEM0 插件', D:'搭建 SQLite 数据库'}, ans: 'A', exp: '纯文本持久化方案。' },
-    { type: 'single', q: '搭建完整且稳定的 OpenClaw 持久记忆架构,最合理的实施方式是?()', options: {A:'仅使用基础 Markdown 文件', B:'仅依靠原生内存搜索', C:'仅采用 SQLite 数据库', D:'多种记忆方案组合搭配使用'}, ans: 'D', exp: '组合搭配可兼顾静态信息、语义检索与结构化存储。' },
-    { type: 'single', q: '想要实现 OpenClaw 自动化记忆管理,完成语义化矢量记忆检索,推荐使用的工具是?()', options: {A:'LanceDB', B:'MEM0 插件', C:'OpenViking', D:'SQLite'}, ans: 'B', exp: 'MEM0 用于自动化语义化矢量记忆检索。' },
-    { type: 'single', q: '在 OpenClaw 长期记忆优化的高阶技巧中,用于存储复杂结构化数据的方式是?()', options: {A:'Markdown 文档', B:'原生内存搜索', C:'MEM0 插件', D:'SQLite 数据库'}, ans: 'D', exp: 'SQLite 适合结构化存储。' },
-    { type: 'single', q: '大模型处理人类文字时,用于将文本转换为机器可识别数字的核心工具是()', options: {A:'Tokenizer', B:'Photoshop', C:'Word', D:'Excel'}, ans: 'A', exp: 'Tokenizer 负责转换 Token/数字序列。' },
-    { type: 'single', q: 'Tokenizer 训练过程中,用于合并字符、构建词表的核心算法是()', options: {A:'BPE 算法', B:'冒泡排序', C:'二分查找', D:'递归算法'}, ans: 'A', exp: '核心算法是 BPE。' },
-    { type: 'single', q: '大模型的计费、上下文长度限制,均以哪种单位为核心标准()', options: {A:'汉字个数', B:'单词个数', C:'Token 数量', D:'字符个数'}, ans: 'C', exp: '计量标准是 Token 数量。' },
+    { type: 'single', q: '社会道路开展试验应遵循的第一原则是（ ）', options: {A:'效率优先，尽快完成试验任务', B:'安全第一，保障公共交通安全', C:'数据、里程优先，确保试验数据完整', D:'成本优先，控制试验经费支出'}, ans: 'B', exp: '' },
+    { type: 'single', q: '进入各个试验基地，行车车速要求（ ）', options: {A:'随意行驶', B:'60KM/h', C:'20KM/h', D:'严格按照各道路限速行驶，根据实际情况适当减速'}, ans: 'D', exp: '' },
+    { type: 'single', q: '高压线束颜色通常为（ ）', options: {A:'绿色', B:'黑色', C:'橙色', D:'红色'}, ans: 'C', exp: '' },
+    { type: 'single', q: '交流充电口与直流充电口外观区别是（ ）', options: {A:'颜色不同', B:'材质不同', C:'位置不同', D:'接口针脚数量与大小'}, ans: 'D', exp: '' },
+    { type: 'single', q: '仅外观解密车型，停车后正确做法是（ ）', options: {A:'遮挡车衣', B:'遮挡临牌', C:'遮挡车窗、内饰', D:'锁车离开'}, ans: 'C', exp: '' },
+    { type: 'single', q: '测试过程中车机大屏卡死，正确做法是（ ）', options: {A:'暴力敲击屏幕', B:'记录故障现象，寻找安全地带停车尝试重启并记录处理措施', C:'立即停车拆解', D:'无视，继续开展试验'}, ans: 'B', exp: '' },
+    { type: 'single', q: '动力电池SOC指的是（ ）', options: {A:'电池温度', B:'剩余电量百分比', C:'充电电流', D:'电池健康度'}, ans: 'B', exp: '' },
+    { type: 'single', q: 'EV车型与EVR最大结构区别是（ ）', options: {A:'有无发动机/增程器', B:'有无电池', C:'有无电机', D:'有无高压线束'}, ans: 'A', exp: '' },
+    { type: 'single', q: '测试过程中出现异味（焦糊、刺鼻），应（  ）', options: {A:'开窗继续', B:'立即停车断电检查', C:'喷香水', D:'加快速度跑完'}, ans: 'B', exp: '' },
+    { type: 'single', q: '以下不属于高压部件的是（ ）', options: {A:'电机', B:'逆变器', C:'12V蓄电池', D:'高压线束'}, ans: 'C', exp: '' },
+    { type: 'single', q: '测试过程中任何安全隐患，处理原则是（ ）', options: {A:'先完成任务', B:'先安全、再上报、再处理', C:'先拍照', D:'先隐瞒'}, ans: 'B', exp: '' },
+    { type: 'single', q: '急加速、急减速工况主要测试（ ）', options: {A:'动力、制动、底盘稳定性', B:'异响', C:'轮胎寿命', D:'外观耐久'}, ans: 'A', exp: '' },
+    { type: 'single', q: '测试过程中遇到出现强风天气，驾驶员的正确做法是（ ）', options: {A:'加快车速快速通过', B:'减速慢行，握紧方向盘，避免车辆偏移', C:'打开车窗通风', D:'关闭车辆稳定系统'}, ans: 'B', exp: '' },
+    { type: 'single', q: '车辆行驶时方向跑偏可能原因是（   ）', options: {A:'座椅没调好', B:'车机卡顿', C:'胎压不均，四轮定位异常', D:'音乐声音大'}, ans: 'C', exp: '' },
+    { type: 'single', q: '寒区环境动力电池性能下降主要表现为（ ）', options: {A:'动力变强', B:'底盘变高', C:'噪声较小', D:'续航缩短，充电变慢'}, ans: 'D', exp: '' },
+    { type: 'single', q: '路试前绕车检查重点是（ ）', options: {A:'车身划痕及损伤', B:'高压插接件有无进水、底盘有无渗漏', C:'座椅', D:'内饰状态'}, ans: 'B', exp: '' },
+    { type: 'single', q: '路试人员发现他人违规驾驶测试车辆，应（ ）', options: {A:'视而不见', B:'及时制止并上报', C:'跟着学', D:'事后议论'}, ans: 'B', exp: '' },
+    { type: 'single', q: '驾驶机动车遇前方机动车排队时，应当怎么做？（ ）', options: {A:'借道超车', B:'依次排队等候', C:'穿插等候车辆', D:'鸣喇叭催促'}, ans: 'B', exp: '' },
+    { type: 'single', q: '海南高温高湿环境雨水较多，路面平坦，暴雨时路面排水功能较差，行驶时应该（ ）', options: {A:'加速通过', B:'和平时一样驾驶', C:'双手紧握方向盘，把控车距车速 平稳通过', D:'S型行驶'}, ans: 'C', exp: '' },
+    { type: 'single', q: '高湿环境路试，重点关注（ ）', options: {A:'各零部件受潮锈蚀', B:'发电效率升高', C:'噪音减小', D:'油耗降低'}, ans: 'A', exp: '' },
+    { type: 'single', q: '高原路试，通过牧区（牛羊较多）路段应注意（ ）', options: {A:'猛踩电门强行通过', B:'视线放远，提前减速，必要时停车让行', C:'使用灯光闪烁提示', D:'正常行驶'}, ans: 'B', exp: '' },
+    { type: 'single', q: '高寒环境路试，路试员需做好的个人防护是（ ）', options: {A:'穿戴防晒用品', B:'穿戴保暖衣物、保暖手套，防止冻伤', C:'穿短袖衣物、短裤、人字拖', D:'戴遮阳帽'}, ans: 'B', exp: '' },
+    { type: 'single', q: '寒区冰雪基地内开展试验，需要（ ）', options: {A:'按个人习惯驾驶开展试验', B:'交警无法管理，随意驾驶', C:'按要求预约成功后进入、严格按照场内规则行驶及测试', D:'私自进入开展测试'}, ans: 'C', exp: '' },
+    { type: 'single', q: '驾驶机动车在道路上追逐竟驶情节恶劣的，构成什么罪？（ ）', options: {A:'交通肇事罪', B:'危险驾驶罪', C:'危害公共安全罪', D:'故意犯罪'}, ans: 'B', exp: '' },
+    { type: 'single', q: '高原路试，路试路线应优先选择（ ）', options: {A:'连续长上坡路段', B:'平缓路段逐步过渡到高海拔路段，避免急升海拔', C:'多弯陡坡路段', D:'按规定试验线路行驶'}, ans: 'D', exp: '' },
+    { type: 'single', q: '高寒环境路试，车辆静置过久后，可能会出现（ ）', options: {A:'车辆亏电', B:'油耗降低', C:'油耗升高', D:'空调故障'}, ans: 'B', exp: '' },
+    { type: 'single', q: '高温环境路试，路试员需重点关注的是（ ）', options: {A:'车机娱乐功能', B:'动力电池温度、散热系统工作状态、仪表高温报警灯', C:'内饰清洁', D:'车身划痕'}, ans: 'B', exp: '' },
+    { type: 'single', q: '下列雪地陷车正常处理手段是（ ）', options: {A:'猛踩电门强行脱困', B:'打开车辆相应功能，如雪地模式、脱困模式（如无法脱困，上报现场队长救援）', C:'打开空调', D:'关闭ESC功能，左右打方向盘脱困'}, ans: 'B', exp: '' },
+    { type: 'single', q: '驾驶机动车超车时，应提前开启什么灯？（ ）', options: {A:'左转向灯', B:'右转向灯', C:'危险报警灯', D:'远光灯'}, ans: 'A', exp: '' },
+    { type: 'single', q: '路试开展前每班需检查（ ）', options: {A:'内饰状态', B:'所有功能项均需要全面检查', C:'车机流畅度', D:'车窗状态'}, ans: 'B', exp: '' },
+    { type: 'single', q: '测试过程中，电池包热管理系统异常会导致（ ）', options: {A:'电池温度正常', B:'动力限功率，影响测试数据', C:'充电速度加快', D:'电机噪音减小'}, ans: 'B', exp: '' },
+    { type: 'single', q: '机动车通过没有交通信号灯控制的交叉路口，应当怎样做（ ）', options: {A:'加速通过', B:'减速慢行，注意观察', C:'鸣喇叭催促', D:'直接通过'}, ans: 'B', exp: '' },
+    { type: 'single', q: '下列那一种故障属于硬件故障（ ）', options: {A:'右侧后视镜收折时"咔咔"异响', B:'车机系统卡顿、黑屏', C:'轮胎气压无法识别、误报', D:'车机导航无法启动、闪退'}, ans: 'A', exp: '' },
+    { type: 'single', q: '车辆能量回收系统关闭的原因可能是（ ）', options: {A:'电池温度过低', B:'电池电量充足', C:'空调开启', D:'车速过快'}, ans: 'B', exp: '' },
+    { type: 'single', q: '高温环境路试，轮胎易出现的异常是（ ）', options: {A:'轮胎气压降低', B:'轮胎过热、胎压升高，爆胎风险增加', C:'轮胎磨损减慢', D:'轮胎无异常'}, ans: 'B', exp: '' },
+    { type: 'single', q: '下列那一种故障属于软件故障（ ）', options: {A:'右侧后视镜收折时"咔咔"异响', B:'玻璃开裂', C:'轮胎扎破', D:'导航无法启动'}, ans: 'D', exp: '' },
+    { type: 'single', q: '高原路试，路试员出现头晕、气短等高原反应时，应（ ）', options: {A:'继续路试，工作第一', B:'上报队长，立即停止路试，到安全区域休息、吸氧', C:'加快路试进度，保证试验进度', D:'忽略反应'}, ans: 'B', exp: '' },
+    { type: 'single', q: '高寒环境路试，车辆轮胎应该提前更换为（ ）', options: {A:'雪地胎', B:'四季胎', C:'赛车胎', D:'热熔胎'}, ans: 'B', exp: '' },
+    { type: 'single', q: '高温环境路试，增程式车辆增程器易出现（ ）', options: {A:'发电效率升高', B:'散热不良，温度过高', C:'油耗降低', D:'噪音减小'}, ans: 'B', exp: '' },
+    { type: 'single', q: '高温高湿环境路试，底盘部件易出现的异常是（ ）', options: {A:'部件磨损减慢', B:'部件受潮，腐蚀风险升高', C:'部件温度过低', D:'部件固定更牢固'}, ans: 'B', exp: '' },
+    { type: 'single', q: '高原路试，海拔落差大，频繁使用制动功能，班前需（ ）', options: {A:'除霜除雾，避免视线盲区', B:'打开导航', C:'充电功能', D:'重点检查制动摩擦块厚度'}, ans: 'B', exp: '' },
+    { type: 'single', q: '高寒环境冰雪路段路试，车辆行驶时，应（ ）', options: {A:'猛踩电门加速', B:'缓慢控速，避免轮胎打滑', C:'关闭空调节能', D:'开启强能量回收'}, ans: 'B', exp: '' },
+    { type: 'single', q: '高温环境路试，路试员需做好的个人防护是（ ）', options: {A:'穿戴保暖衣物、保暖手套', B:'佩戴防晒用品、及时补充水分，防止中暑', C:'戴防滑手套', D:'穿厚工作服'}, ans: 'B', exp: '' },
+    { type: 'single', q: '高湿环境路试，车机系统易出现（ ）', options: {A:'操作时流畅度提升', B:'卡顿、黑屏，因线路受潮', C:'音量增大', D:'无异常'}, ans: 'B', exp: '' },
+    { type: 'single', q: '标定试验开展前需重点检查车辆（ ）', options: {A:'临牌是否对应是否过期、车辆状态是否满足', B:'内饰清洁度', C:'座椅', D:'油耗'}, ans: 'A', exp: '' },
+    { type: 'single', q: '酒后驾驶机动车一次记几分（ ）', options: {A:'6分', B:'9分', C:'12分', D:'暂扣驾驶证'}, ans: 'C', exp: '' },
+    { type: 'single', q: '高温环境路试，车辆快充时需重点观察（ ）', options: {A:'充电速度', B:'电池温度、充电电流，有无高温报警', C:'车机状态受否开启', D:'空调风量'}, ans: 'B', exp: '' },
+    { type: 'single', q: '路试过程中，减速通过积水路段的主要目的是（ ）', options: {A:'防止车身划痕', B:'防止车辆失控', C:'避免轮胎磨损', D:'减少噪音'}, ans: 'B', exp: '' },
+    { type: 'single', q: '驾驶机动车不按规定使用灯光，一次记多少分？（ ）', options: {A:'1分', B:'2分', C:'3分', D:'6分'}, ans: 'A', exp: '' },
+    { type: 'single', q: '高寒环境路试，路试前需检查雪地胎的（ ）', options: {A:'尺寸', B:'有无结冰迹象', C:'胎纹磨损程度', D:'制动噪音'}, ans: 'B', exp: '' },
+    { type: 'single', q: '高温环境路试，增程式车辆增程器冷却系统异常会导致（ ）', options: {A:'增程器温度过低', B:'增程器限功率，影响测试数据', C:'油耗降低', D:'发电效率升高'}, ans: 'B', exp: '' },
+    { type: 'single', q: '重庆长里程测试，山路工况易出现（ ）', options: {A:'大货车弯道占道行驶', B:'无异常', C:'轮胎磨损', D:'油耗降低'}, ans: 'A', exp: '' },
+    { type: 'single', q: '各试验基地每周会举行周安全例会，应该（ ）', options: {A:'无所谓', B:'我行我素，不参加', C:'应付', D:'认真听从各基地工作安排及安全提醒并执行到位'}, ans: 'D', exp: '' },
+    { type: 'single', q: '高寒环境路试，车辆挂挡后无法行驶的原因可能是（ ）', options: {A:'空调开启', B:'高压系统故障、电芯温度达到物理极限无法放电', C:'车机开启缓慢', D:'能量回收开启'}, ans: 'B', exp: '' },
+    { type: 'single', q: '智驾功能NCA开启正确方式是（ ）', options: {A:'长按喇叭', B:'按方向盘左滚轮', C:'方向盘右滚轮', D:'语音指令'}, ans: 'B', exp: '' },
+    { type: 'single', q: '智驾功能NCA功能使用时应注意（ ）', options: {A:'自动驾驶无需理会', B:'脚踩油门、车辆会自己转向', C:'双手握方向盘，脚放刹车上方，随时准备人工接管', D:'闭眼睡觉'}, ans: 'C', exp: '' },
+    { type: 'single', q: '队车行驶，前车注意事项（ ）', options: {A:'随时关注所有队车行驶状态，遇安全风险，及时提醒', B:'时快时慢', C:'事不关己', D:'随意变换位置'}, ans: 'A', exp: '' },
+    { type: 'single', q: '高寒环境路试，纯电车无法正常快充的原因可能是（ ）', options: {A:'电池温度过低，未完成预热', B:'座椅加热未开启', C:'车机未开启', D:'空调未开启'}, ans: 'A', exp: '' },
+    { type: 'single', q: '功能测试时，路试员应做到（）', options: {A:'私自测试', B:'里程重要，快速测试', C:'不予理会', D:'保证安全得前提下全力配合工程师按测试用例执行'}, ans: 'D', exp: '' },
+    { type: 'single', q: '标定试验前应对危险路况做出（ ）', options: {A:'低速行驶', B:'严格听从工程师安排，他说这么做就怎么做', C:'结合自身、车辆状态进行风险评估，必要时可暂停试验'}, ans: 'C', exp: '' },
+    { type: 'single', q: '高原路试，路试员需携带的应急物品是（ ）', options: {A:'娱乐设备', B:'氧气瓶、应急药品、三角警示牌', C:'饮用水', D:'保暖衣物'}, ans: 'B', exp: '' },
+    { type: 'single', q: '高寒环境路试，轮胎易出现的问题是（ ）', options: {A:'轮胎气压升高', B:'橡胶变硬，抓地力下降', C:'轮胎磨损加快', D:'轮胎无异常'}, ans: 'B', exp: '' },
+    { type: 'single', q: '高温环境路试，纯电车电池包出现高温报警时，应（ ）', options: {A:'继续路试', B:'立即停车冷却，记录报警数据', C:'加快路试进度', D:'关闭报警继续行驶'}, ans: 'B', exp: '' },
+    { type: 'single', q: '适应性试验队车行驶时，遇红路灯路口正确做法(   )', options: {A:'提前减速，把控车距车速，全方位观察，防御性驾驶', B:'无视', C:'绿灯时加速通过', D:'黄灯时加速通过'}, ans: 'A', exp: '' },
+    { type: 'single', q: '交接班时检查到车辆有划痕及损伤正确做法是（ ）', options: {A:'正常开展试验', B:'自行处理', C:'汇报当班队长并记录在车辆损伤表格内', D:'隐瞒汇报'}, ans: 'C', exp: '' },
+    { type: 'single', q: '路试人员发生安全事故未上报的处理方式是（ ）', options: {A:'退回三方公司不再使用，当班为不合格班次', B:'正常上班', C:'自费修理', D:'停班处理'}, ans: 'B', exp: '' },
+    { type: 'single', q: '测试过程中如道路有安全风险（如滑坡、车祸等影响驾驶安全的事项），正确做法是（ ）', options: {A:'停车观看', B:'事不关己', C:'拍照发朋友圈', D:'上报队长或在安全地带停车发布到工作群告知所有人员注意'}, ans: 'D', exp: '' },
+    { type: 'single', q: '寒区基地，冰雪基地试验场车辆进出场地时需横穿高速雪环工况道，正确做法是（ ）', options: {A:'鸣笛通行', B:'到达高速雪环路口时按场地要求及标识牌提示，提前减速，停车观察，观察安全后通过', C:'加速通过', D:'正常通行'}, ans: 'B', exp: '' },
+    { type: 'single', q: '随车救援工具包括（ ）', options: {A:'备胎', B:'医药箱', C:'拖车绳、拖车杆、轮胎拆装工具、铁锹、搭电宝', D:'氧气瓶'}, ans: 'C', exp: '' },
+    { type: 'single', q: '车间举升机使用前需要（ ）', options: {A:'直接操作', B:'已经点检可以正常使用', C:'工程师指挥下操作', D:'经过举升机使用培训后，使用前关注是否点检'}, ans: 'D', exp: '' },
+    { type: 'single', q: '路试过程中，如遇路人招手乘车（ ）', options: {A:'停车聊天', B:'人情世故同意', C:'不予理会，遵守试验车辆严谨拉人规则', D:'让他和队长沟通'}, ans: 'C', exp: '' },
+    { type: 'single', q: '三高环境路试，路途中车队停车吃饭应该注意（ ）', options: {A:'随意选择', B:'路边停靠车辆', C:'队长评估环境是否安全，保密车辆执行好保密措施', D:'队长评估环境是否安全，保密车辆执行好保密措施'}, ans: 'C', exp: '' },
+    { type: 'single', q: '在高速公路上倒车、逆行、穿越中央隔离带调头，一次记几分？（ ）', options: {A:'3分', B:'6分', C:'9分', D:'12分'}, ans: 'A', exp: '' },
+    { type: 'single', q: '驾驶机动车在雨天临时停车，应该开启什么灯？（ ）', options: {A:'前后雾灯', B:'危险报警闪光灯', C:'前大灯', D:'倒车灯'}, ans: 'B', exp: '' },
+    { type: 'single', q: '测试过程中，路过景区及游客较多路段正确做法（ ）', options: {A:'正常跟车', B:'加速通过', C:'拉开车距、超车需鸣笛提示', D:'拉开车距、超车需鸣笛提示'}, ans: 'C', exp: '' },
+    { type: 'single', q: '问界高阶智驾系统官方名称是？（ ）', options: {A:'华为NIO', B:'华为乾崑ADS', C:'华为XNGP', D:'华为NOA'}, ans: 'B', exp: '' },
+    { type: 'single', q: '车辆主动安全辅助功能AEB全称是？（ ）', options: {A:'车道保持', B:'盲区监测', C:'自适应巡航', D:'自动紧急制动'}, ans: 'D', exp: '' },
+    { type: 'single', q: '高寒环境路试，制动距离易（ ）', options: {A:'缩短', B:'延长，因冰雪路面附着力低、轮胎抓地力下降', C:'不变', D:'随机变化'}, ans: 'B', exp: '' },
+    { type: 'single', q: '华为乾崑ADS4.0城区NCA是否依赖高精度地图？（ ）', options: {A:'必须依赖', B:'部分依赖', C:'不依赖', D:'高速依赖城区不依赖'}, ans: 'C', exp: '' },
+    { type: 'single', q: '下列哪个唤醒词是问界系列车辆智慧语音最常用的唤醒词（ ）', options: {A:'小度，小度', B:'小艺，小艺', C:'小爱同学', D:'你好，奔驰'}, ans: 'B', exp: '' },
+    { type: 'single', q: '想要唤醒问界车机语音，除了喊唤醒词外，还可以怎么做？（ ）', options: {A:'连续按两次双闪', B:'旋转音量旋钮', C:'按住方向盘滚轮', D:'长按方向盘右侧语音键'}, ans: 'D', exp: '' },
+    { type: 'single', q: '问界车辆智慧语音不支持以下哪种操作？（ ）', options: {A:'打开雨刮喷水', B:'调节车窗', C:'导航到目的地', D:'调节空调温度'}, ans: 'A', exp: '' },
+    { type: 'single', q: '车辆冷却系统需重点检查（ ）', options: {A:'冷却管路有无渗漏、散热风扇工作状态', B:'冷却剂颜色', C:'冷却剂品牌', D:'线束外观有无干涉'}, ans: 'A', exp: '' },
+    { type: 'single', q: '问界车辆搭载车机系统基于哪个平台？（ ）', options: {A:'DiLinK', B:'ALiOS', C:'Android Automotive', D:'HarmonyOS(鸿蒙)'}, ans: 'D', exp: '' },
+    { type: 'single', q: '公司车辆实现辅助驾驶时，主要依靠的系统名称是？（ ）', options: {A:'NGP', B:'ADS', C:'NOA', D:'PiIot Assist'}, ans: 'B', exp: '' },
+    { type: 'single', q: '公司车辆充电口一般处于车身哪个位置？（ ）', options: {A:'车头LOGO', B:'贯穿式尾灯中间', C:'左后翼子板、左后尾灯旁', D:'右后翼子板、右后尾灯旁'}, ans: 'C', exp: '' },
+    { type: 'single', q: '公司EVR车型亏电行驶时，动力逻辑是？（ ）', options: {A:'发动机直接驱动车轮', B:'发动机发电供电机驱动', C:'高压蓄电池单独驱动', D:'48V轻混驱动'}, ans: 'B', exp: '' },
+    { type: 'single', q: '公司车辆车机系统升级主要方式是？（ ）', options: {A:'手机安装包传输升级', B:'到店电脑刷机', C:'U盘本地升级', D:'OTA在线升级'}, ans: 'D', exp: '' },
+    { type: 'single', q: '测试过程中增程器启动后出现明显抖动，以下处理正确的是？（ ）', options: {A:'无视继续路试', B:'降低车速，寻找安全地带停车汇报，并记录故障', C:'切换驾驶模式拉高转速', D:'里程优先，降低车速继续路试'}, ans: 'B', exp: '' },
+    { type: 'single', q: '车辆车窗及前档玻璃起雾影响视线时，正确做法是？（ ）', options: {A:'开启空调除雾模式，合理调节温度及风量', B:'用手擦拭', C:'用毛巾擦拭', D:'打开所有车窗通风'}, ans: 'A', exp: '' },
+    { type: 'single', q: '测试过程中发现车窗防夹功能异常，正确判断是？（ ）', options: {A:'重启车机即可', B:'断电后即可恢复', C:'功能失效，存在安全隐患需记录故障', D:'车机流畅度'}, ans: 'C', exp: '' },
+    { type: 'single', q: '车辆检查空调制冷/制热效果，应重点关注？（ ）', options: {A:'出风口外观', B:'空调滤芯品牌', C:'出风口温度、模式切换、风量调节是否正常', D:'ABS正常状态'}, ans: 'C', exp: '' },
+    { type: 'single', q: '高原路试，增程式车辆油耗升高的主要原因是（ ）', options: {A:'车速过快', B:'空气稀薄，增程器燃烧不充分', C:'轮胎磨损', D:'空调开启'}, ans: 'B', exp: '' },
+    { type: 'single', q: 'ADS智驾功能开启时，以下做法正确的是？（ ）', options: {A:'双手脱离方向盘全程交由系统控制', B:'在非开放道路闭眼测试', C:'行驶时睡觉', D:'ADS智驾为安全辅助驾驶功能，驾驶员必须全程关注，如遇危险需及时接管'}, ans: 'D', exp: '' },
+    { type: 'single', q: '高寒环境路试，雨刮水使用哪一类（ ）', options: {A:'自来水', B:'防冻型玻璃水（低冰点）', C:'防冻液', D:'洗洁精兑水'}, ans: 'B', exp: '' },
+    { type: 'single', q: '高速行车时，路面突然横穿野生动物，正确做法是？（ ）', options: {A:'加速行驶', B:'紧急猛打方向盘避让', C:'连续鸣笛将动物吓退', D:'紧急制动并尽量保持直线，避免急打方向'}, ans: 'D', exp: '' },
+    { type: 'single', q: '冰雪路面制动时出现ABS介入，正确判断是？（ ）', options: {A:'正常防抱死工作，保持制动继续控制方向', B:'车辆故障，立即停车报修', C:'松开刹车重新猛踩', D:'紧急打方向避让'}, ans: 'A', exp: '' },
+    { type: 'single', q: '通过有落石风险的路段，应该？（ ）', options: {A:'靠边停车', B:'鸣笛后正常行驶', C:'提前减速，谨慎观察，快速通过不逗留', D:'停车观看'}, ans: 'C', exp: '' },
+    { type: 'single', q: '通过有塌方、滑坡风险的路段，应该？（ ）', options: {A:'靠边停车观察后缓慢通过', B:'提前减速观察，确认安全后快速通过', C:'开启双闪低速通过', D:'无所谓'}, ans: 'B', exp: '' },
+    { type: 'single', q: '驾驶车辆通过施工路段，正确做法是？（ ）', options: {A:'停车查看施工进度', B:'随意变道', C:'减速慢行，按照警示标志和指挥有序通行', D:'加速通过'}, ans: 'C', exp: '' },
+    { type: 'single', q: '试验开展过程中，驾驶试验样车如遇尿急等紧急事情，下列正确做法是？（ ）', options: {A:'随意靠边停车解决', B:'加快测试速度及时返回基地', C:'汇报车队长一起寻找停车区域停车解决', D:'脱离队车队伍自行寻找地方解决'}, ans: 'C', exp: '' },
+    { type: 'single', q: '各个固定试验线路上的停车区和休息区如何选择？（ ）', options: {A:'寻找空旷区域', B:'寻找安静区域', C:'寻找风景较好区域', D:'按现场队长指定的固定区域'}, ans: 'D', exp: '' },
+    { type: 'single', q: '各试验车队队长职责是？', options: {A:'带路作用', B:'监督驾驶操作', C:'监督试验流程', D:'安全把控、监督试验流程执行'}, ans: 'D', exp: '' },
 
     // --- 判断题 ---
-    { type: 'boolean', q: '世界模型被普遍认为是迈向人工通用智能(AGI)的关键一步。', ans: '√', exp: '世界模型是迈向 AGI 的重要路径。' },
-    { type: 'boolean', q: '世界模型的核心是让 AI 通过观测环境、构建虚拟世界规则,从而自主预测未来状态并做出决策,而非仅执行固定指令。', ans: '√', exp: '本质是学习动态规律具备规划能力。' },
-    { type: 'boolean', q: '世界模型的核心是让 AI 不仅能"看见"世界,还能推演世界。', ans: '√', exp: '从“看见”升级到“推演”。' },
-    { type: 'boolean', q: 'HarnessEngineering 的中文常被翻译为"驾驭工程"或"围栏工程"。', ans: '√', exp: '常见翻译。' },
-    { type: 'boolean', q: 'HarnessEngineering 的核心是为 AI 智能体构建一套完整的运行环境、约束规则与反馈闭环。', ans: '√', exp: '强调运行环境与闭环。' },
-    { type: 'boolean', q: 'AgentSkill 是由 AI 公司 Anthropic 于 2025 年 10 月正式推出的。', ans: '√', exp: '时间背景正确。' },
-    { type: 'boolean', q: '在 Skill 的 SKILL.md 文件中,开头的部分用于定义技能的名称和描述,其格式是 YAML。', ans: '√', exp: '开头采用 YAML 元数据。' },
-    { type: 'boolean', q: '与主要解决 AI"连接"外部工具问题的 MCP 不同,AgentSkill 主要定义了 AI 该如何使用这些工具来完成复杂业务流程。', ans: '√', exp: 'MCP解决连接，Skill定义流程。' },
-    { type: 'boolean', q: 'RAG 的中文全称是检索增强生成,核心是通过外部检索增强模型生成能力。', ans: '√', exp: 'RAG 定义。' },
-    { type: 'boolean', q: 'OpenClaw 是基于 Agent(智能体)架构打造的自动化执行 AI 智能体工具。', ans: '√', exp: '功能定义正确。' },
-    { type: 'boolean', q: '大模型的上下文窗口长度,其计量单位是 Token。', ans: '√', exp: '计量单位是 Token。' },
-    { type: 'boolean', q: 'Tokenizer 训练过程中,用于自动合并字符的核心算法是 BPE 算法。', ans: '√', exp: '核心合并算法为 BPE。' },
+    { type: 'boolean', q: '高原环境路试，纯电车动力衰减是正常现象，无需记录相关数据。', ans: '×', exp: '' },
+    { type: 'boolean', q: '高温环境，连续长下坡行驶，车辆制动距离会增加。', ans: '√', exp: '' },
+    { type: 'boolean', q: '路试过程中，轮胎型号大小差不多的可以随意使用。', ans: '×', exp: '' },
+    { type: 'boolean', q: '举升机使用时，如果没有安全帽，可以不带。', ans: '×', exp: '' },
+    { type: 'boolean', q: '关闭充电桩电闸时，需要按要求佩戴绝缘手套。', ans: '√', exp: '' },
+    { type: 'boolean', q: '能量回收系统关闭后，会导致制动距离延长。', ans: '√', exp: '' },
+    { type: 'boolean', q: '座椅前后滑动“吱吱异响”、抖动属于软件故障。', ans: '×', exp: '' },
+    { type: 'boolean', q: '动力系统故障灯长亮时，代表车辆动力系统出现故障。', ans: '√', exp: '' },
+    { type: 'boolean', q: '高原路试，路试员出现高原反应，可继续完成路试任务。', ans: '×', exp: '' },
+    { type: 'boolean', q: '低压供电系统异常状态指示灯点亮时，可以先尝试启动车辆给低压电池充电，若灯仍点亮则需停车处理及上报。', ans: '√', exp: '' },
+    { type: 'boolean', q: '测试过程中，轮胎出现鼓包、开裂应立即更换轮胎，避免爆胎风险并按要求提报。', ans: '√', exp: '' },
+    { type: 'boolean', q: '高湿环境路试，不要将打火机、充电宝等易燃易爆物品留在车内。', ans: '√', exp: '' },
+    { type: 'boolean', q: '冰雪路面行驶，应降低车速，增大跟车距离，尽量避免急加急减速。', ans: '√', exp: '' },
+    { type: 'boolean', q: '高温环境路试，空调故障车辆可以正常开展试验。', ans: '×', exp: '' },
+    { type: 'boolean', q: '遇非机动车辆较多的路段，正确做法是鸣笛催促，加速通过。', ans: '×', exp: '' },
+    { type: 'boolean', q: '电车充电接口无需做防潮处理，直接充电即可。', ans: '√', exp: '' },
+    { type: 'boolean', q: '高原路试，增程式车辆排气颜色发黑，说明增程器燃烧充分。', ans: '×', exp: '' },
+    { type: 'boolean', q: '高寒环境路试，车辆静置过夜后，电池温度过低会影响快充速度。', ans: '√', exp: '' },
+    { type: 'boolean', q: '高温环境路试，电机电控过热会导致动力限功率，影响测试数据。', ans: '√', exp: '' },
+    { type: 'boolean', q: '开启自适应巡航功能后，车辆能自动跟车减速，属于正常的辅助驾驶功能。', ans: '√', exp: '' },
+    { type: 'boolean', q: '行驶过程中开启儿童锁功能，后排车门无法从内部打开，属于正常安全设计。', ans: '√', exp: '' },
+    { type: 'boolean', q: '高寒环境路试，轮胎橡胶变硬，会导致抓地力下降，制动距离延长。', ans: '√', exp: '' },
+    { type: 'boolean', q: '为了模拟用户场景，路试员可以随意驾驶车辆到随意路段进行测试。', ans: '×', exp: '' },
+    { type: 'boolean', q: '正常行驶中，方向盘出现卡顿、跑偏，属于安全风险，需谨慎驾驶。', ans: '√', exp: '' },
+    { type: 'boolean', q: '试验路线应避开连续长上坡、急弯路段，避免电机过载。', ans: '√', exp: '' },
+    { type: 'boolean', q: '倒车时，倒车影响出现卡顿、黑屏，会影响倒车安全，属于功能故障。', ans: '√', exp: '' },
+    { type: 'boolean', q: '早班、晚班交接班时，主要是交还车辆钥匙。', ans: '×', exp: '' },
+    { type: 'boolean', q: '开展班前会和周例会主要是应付工作，可以不用理会。', ans: '×', exp: '' },
+    { type: 'boolean', q: '三方公司管理要求不严格，可以随意旷工。', ans: '×', exp: '' },
+    { type: 'boolean', q: '高寒环境路试，车辆无法正常快充，大概率是电池未完成预热。', ans: '√', exp: '' },
+    { type: 'boolean', q: '标定测试中，工程师要求最高车速工况，路试员需无条件执行。', ans: '×', exp: '' },
+    { type: 'boolean', q: '标定试验，路试人员需要对道路安全风险进行评估后再开展试验。', ans: '√', exp: '' },
+    { type: 'boolean', q: '高原路试，路试员需携带氧气瓶、应急药品等应急物品。', ans: '√', exp: '' },
+    { type: 'boolean', q: '雨天行车，开启雨刮后视线依然模糊，应立即寻找安全停车区域停车等待雨小后行驶。', ans: '√', exp: '' },
+    { type: 'boolean', q: '车机卡顿、黑屏，属于硬件故障。', ans: '×', exp: '' },
+    { type: 'boolean', q: '车窗防夹功能触发后，车窗会自动回落，这是安全保护设计。', ans: '√', exp: '' },
+    { type: 'boolean', q: '通过施工路段，不用关注现场警示标识和现场指挥。', ans: '×', exp: '' },
+    { type: 'boolean', q: '高寒环境，组合仪表无任何故障灯的情况下，车辆能正常挂挡但无法行驶，可能原因是电池包电芯温度达到物理极限无法放电。', ans: '√', exp: '' },
+    { type: 'boolean', q: '高温试验，电池包出现高温报警，应立即停车冷却，并记录报警数据。', ans: '√', exp: '' },
+    { type: 'boolean', q: '强光环境下佩戴偏光镜、墨镜属于个人爱好。', ans: '×', exp: '' },
+    { type: 'boolean', q: '夜间行车经过无路灯的乡村路段，可以一直开启远光灯，不用理会对向车辆。', ans: '×', exp: '' },
+    { type: 'boolean', q: '高寒试验，路试员无需穿戴保暖衣物，避免操作不便。', ans: '×', exp: '' },
+    { type: 'boolean', q: '高温试验，车辆长时间暴晒，验证的是车辆在极端环境下的可靠性、安全性。', ans: '√', exp: '' },
+    { type: 'boolean', q: 'EVR车型为新能源汽车，不需要做发动机保养。', ans: '×', exp: '' },
+    { type: 'boolean', q: '路试期间检查车辆内饰件一般关注：褪色、开裂、变形、异味、干涉、异响。', ans: '√', exp: '' },
+    { type: 'boolean', q: '灰尘浸入测试主要验证车辆的整车防尘、密封、电气可靠性、动力系统可靠性、热管理可靠性。', ans: '√', exp: '' },
+    { type: 'boolean', q: '高温环境路试，路试员需及时补充水分，防止中暑。', ans: '√', exp: '' },
+    { type: 'boolean', q: '开展雪侵入测试主要验证车辆密封性、电器可靠性、动力系统耐受性。', ans: '√', exp: '' },
+    { type: 'boolean', q: '填写车辆保电记录单主要目的是为了关注车辆长时间停放后车辆保电能力。', ans: '√', exp: '' },
+    { type: 'boolean', q: '适应性试验操作耐久测试，仅需要按个人习惯操作就可以了。', ans: '×', exp: '' },
 
     // --- 多选题 ---
-    { type: 'multi', q: '以下关于世界模型的说法,正确的有()', options: {A:'世界模型强调对真实世界的预测与推演能力', B:'世界模型的研究转向与大语言模型 ScalingLaw 受限有关', C:'世界模型被认为是迈向 AGI 的重要路径之一', D:'世界模型的主流路线之一包含 3D 空间智能'}, ans: 'ABCD', exp: '四项均符合世界模型特征。' },
-    { type: 'multi', q: '以下积极投入世界模型研发的科技巨头与机构有()', options: {A:'OpenAI', B:'谷歌', C:'Meta', D:'传统零售企业'}, ans: 'ABC', exp: '头部科技公司积极投入，传统零售非研发主体。' },
-    { type: 'multi', q: '以下哪些被描述为 Harness(驾驭系统)的组成部分或比喻?()', options: {A:'缰绳(对应提示词工程)', B:'马鞍(对应 RAG 插件)', C:'马镫(对应闭环的沙盒执行环境)', D:'引擎(对应 AI 大模型本身)'}, ans: 'ABC', exp: '缰绳、马鞍、马镫是马具比喻，引擎不属于马具。' },
-    { type: 'multi', q: '成为一名 HarnessEngineer(驾驭工程师),需要具备哪些新的核心能力?()', options: {A:'项目管理与交付能力', B:'沟通与协作能力,连接业务、产品与技术', C:'商业思维与理解客户需求的能力', D:'从零开始编写所有代码的能力'}, ans: 'ABC', exp: '不需要从零写代码，更强调连接与理解能力。' },
-    { type: 'multi', q: '一个完整的 AgentSkill 文件夹可能包含以下哪些部分?()', options: {A:'SKILL.md(核心指令文件)', B:'scripts/目录', C:'references/目录', D:'assets/目录'}, ans: 'ABCD', exp: '完整的 Skill 文件夹可包含以上所有。' },
-    { type: 'multi', q: '关于"渐进式披露"机制的三层加载,以下描述正确的是?()', options: {A:'第一层(元数据):消耗 Token 极少', B:'第二层(指令):加载完整操作指南', C:'第三层(资源):按需加载详细文档或脚本', D:'该机制要求一次性将所有技能全部加载'}, ans: 'ABC', exp: '渐进式披露是按需加载，而非一次性全部加载。' },
-    { type: 'multi', q: '对 OpenClaw 长期记忆进行优化,主要能够解决的实际问题包括?()', options: {A:'对话意外中断导致信息丢失', B:'频繁调用 API 带来费用虚高', C:'本地模型部署流程过于复杂', D:'记忆信息无法持久保存'}, ans: 'ABD', exp: '优化记忆不解决本地部署流程复杂问题。' },
-    { type: 'multi', q: '下列属于 OpenClaw 长期记忆优化常用方法的有?()', options: {A:'手动构建 Markdown 文件夹', B:'使用原生内存搜索', C:'借助 MEM0 插件实现语义检索', D:'通过 SQLite 数据库结构化存储'}, ans: 'ABCD', exp: '四项均为常用记忆优化方法。' }
+    { type: 'multi', q: '简单描述EVR车型动力逻辑（多选）', options: {A:'发动机不直接驱动车轮，仅发电给电机驱动', B:'电量充足时，纯电驱动', C:'电量不足时，增程器启动发电', D:'高速大负荷时，增程器与电池共同供电'}, ans: 'ABCD', exp: '' },
+    { type: 'multi', q: '高寒环境，新能源车辆无法启动的主要原因是（多选）', options: {A:'低温导致蓄电池电量不足', B:'低温导致动力电池亏电', C:'雨刮被冻住', D:'没更换雪地胎'}, ans: 'AB', exp: '' },
+    { type: 'multi', q: '开展试验前对车辆进行最常规的安全检查包括哪些（多选）', options: {A:'轮胎、胎压、磨损情况', B:'制动系统、刹车油、刹车片', C:'灯光、雨刮、喇叭', D:'油液、冷却液、制动液', E:'随车工具、应急物资', F:'车身划痕'}, ans: 'ABCDE', exp: '' },
+    { type: 'multi', q: '驾驶员安全事故汇报模板包括以下哪些内容（多选）', options: {A:'时间、地点、车型、车号、天气、路况', B:'事故简要经过', C:'人员伤亡情况（本方/对方）', D:'车辆及财产损失初步估计', E:'是否报警、是否叫救护车', F:'现场照片/视频、事发时段行车视频'}, ans: 'ABCDEF', exp: '' },
+    { type: 'multi', q: '高原路试，路试员出现高原反应的应急处理方法（多选）', options: {A:'立即休息，停止驾驶，原地休息，立即上报现场队长', B:'立即吸氧，保持呼吸顺畅', C:'少量多次喝温水，不喝冰水、浓茶、咖啡', D:'解开衣物，保持通风，避免暴晒', E:'症状严重时，立即向低海拔区域转移', F:'出现剧烈头痛、呕吐、呼吸困难、意识模糊，立即送医'}, ans: 'ABCDEF', exp: '' },
+    { type: 'multi', q: '简述高温环境下，路试员出现中暑症状的应急处理方法（多选）', options: {A:'立即转移到阴凉通风处，上报现场队长', B:'脱去紧身衣物，用湿毛巾擦拭身体', C:'意识清醒者口服含盐清凉饮料', D:'体温过高时，用冰袋冷敷头部、腋下等大血管处', E:'出现意识模糊、抽搐等严重症状，立即送医'}, ans: 'ABCDE', exp: '' }
 ];
+
+// 随机抽题函数
+function shuffleArray(array) {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+}
+
+// 抽取指定数量的题目（按顺序：单选→多选→判断）
+function selectQuestions() {
+    const singles = allQuizData.filter(q => q.type === 'single');
+    const multis = allQuizData.filter(q => q.type === 'multi');
+    const booleans = allQuizData.filter(q => q.type === 'boolean');
+
+    const shuffledSingles = shuffleArray(singles);
+    const shuffledMultis = shuffleArray(multis);
+    const shuffledBooleans = shuffleArray(booleans);
+
+    const selected = [
+        ...shuffledSingles.slice(0, 3),
+        ...shuffledMultis.slice(0, 1),
+        ...shuffledBooleans.slice(0, 2)
+    ];
+
+    return selected;
+}
+
+// 生成考试题目
+const quizData = selectQuestions();
 
 // 状态管理
 let currentIndex = 0;
@@ -395,29 +682,19 @@ function initQuiz() {
 function renderSidebar() {
     const grid = document.getElementById('nav-grid');
     grid.innerHTML = '';
-    
+
     let answeredCount = 0;
-    let correctCount = 0;
-    let wrongCount = 0;
 
     quizData.forEach((_, i) => {
         const btn = document.createElement('div');
         btn.className = 'nav-item';
         btn.innerText = i + 1;
-        
-        // 判断状态并附加相应的类名
+
         if (questionHistory[i]) {
             answeredCount++;
-            if (questionHistory[i].isCorrect) {
-                btn.classList.add('answered-correct');
-                correctCount++;
-            } else {
-                btn.classList.add('answered-wrong');
-                wrongCount++;
-            }
+            btn.classList.add('answered-correct');
         }
-        
-        // 当前题目高亮
+
         if (i === currentIndex) {
             btn.classList.add('active');
         }
@@ -427,10 +704,14 @@ function renderSidebar() {
     });
 
     document.getElementById('answered-count').innerText = answeredCount;
-    
-    // 更新总分统计（为最后页面准备）
-    window.currentCorrect = correctCount;
-    window.currentWrong = wrongCount;
+
+    let totalScore = 0;
+    quizData.forEach((q, i) => {
+        if (questionHistory[i] && questionHistory[i].isCorrect) {
+            totalScore += q.type === 'multi' ? 2 : 1;
+        }
+    });
+    window.currentScore = totalScore;
     window.totalAnswered = answeredCount;
 }
 
@@ -446,56 +727,70 @@ function jumpToQuestion(index) {
 function showQuestion() {
     const quizArea = document.getElementById('quiz-area');
     const question = quizData[currentIndex];
-    const history = questionHistory[currentIndex]; // 检查这题是否已经答过
+    const history = questionHistory[currentIndex];
+    
+    // 恢复之前的选择
+    if (history) {
+        selectedAnswers = [...history.selectedAnswers];
+    } else {
+        selectedAnswers = [];
+    }
     
     let typeText = '';
-    if(question.type === 'single') typeText = '单选题';
-    else if(question.type === 'boolean') typeText = '判断题';
-    else typeText = '多选题';
+    let typeClass = '';
+    let score = 0;
+    let count = 0;
+    if(question.type === 'single') {
+        typeText = '单选题';
+        typeClass = 'single';
+        score = 1;
+        count = quizData.filter(q => q.type === 'single').length;
+    } else if(question.type === 'boolean') {
+        typeText = '判断题';
+        typeClass = 'boolean';
+        score = 1;
+        count = quizData.filter(q => q.type === 'boolean').length;
+    } else {
+        typeText = '多选题';
+        typeClass = 'multi';
+        score = 2;
+        count = quizData.filter(q => q.type === 'multi').length;
+    }
 
     let optionsHtml = '';
     if(question.type === 'boolean') {
         optionsHtml = `
-            <div class="option-item ${history ? '' : 'selectable'}" onclick="handleSelect('√')" data-key="√">
+            <div class="option-item selectable" onclick="handleSelect('√')" data-key="√">
                 <strong style="margin-right:10px">√</strong> 正确
             </div>
-            <div class="option-item ${history ? '' : 'selectable'}" onclick="handleSelect('×')" data-key="×">
+            <div class="option-item selectable" onclick="handleSelect('×')" data-key="×">
                 <strong style="margin-right:10px">×</strong> 错误
             </div>
         `;
     } else {
         for(let key in question.options) {
             optionsHtml += `
-                <div class="option-item ${history ? '' : 'selectable'}" onclick="handleSelect('${key}')" data-key="${key}">
+                <div class="option-item selectable" onclick="handleSelect('${key}')" data-key="${key}">
                     <strong style="margin-right:10px">${key}.</strong> ${question.options[key]}
                 </div>
             `;
         }
     }
 
-    // 按钮逻辑：如果答过了，只显示“上一题/下一题”；如果没答，显示“提交”
-    let buttonsHtml = '';
-    if (!history) {
-        buttonsHtml = `
-            <div class="btn-group">
-                <button id="submit-btn" class="btn" onclick="checkAnswer()">提交答案</button>
-            </div>
-        `;
-    } else {
-        buttonsHtml = `<div class="btn-group">`;
-        if (currentIndex > 0) {
-            buttonsHtml += `<button class="btn outline" onclick="jumpToQuestion(currentIndex - 1)">上一题</button>`;
-        }
-        if (currentIndex < quizData.length - 1) {
-            buttonsHtml += `<button class="btn" onclick="jumpToQuestion(currentIndex + 1)">下一题</button>`;
-        } else {
-            buttonsHtml += `<button class="btn" onclick="finishQuiz()">查看成绩单</button>`;
-        }
-        buttonsHtml += `</div>`;
+    // 按钮逻辑：始终显示上一题/下一题
+    let buttonsHtml = `<div class="btn-group">`;
+    if (currentIndex > 0) {
+        buttonsHtml += `<button class="btn outline" onclick="jumpToQuestion(currentIndex - 1)">上一题</button>`;
     }
+    if (currentIndex < quizData.length - 1) {
+        buttonsHtml += `<button class="btn" onclick="jumpToQuestion(currentIndex + 1)">下一题</button>`;
+    } else {
+        buttonsHtml += `<button class="btn" onclick="finishQuiz()">查看成绩单</button>`;
+    }
+    buttonsHtml += `</div>`;
 
     quizArea.innerHTML = `
-        <div class="type-badge">${typeText}</div>
+        <div class="type-badge ${typeClass}">${typeText} ${score}分/题 共${count}题</div>
         <div class="question-title">${currentIndex + 1}. ${question.q}</div>
         <div class="options-list" id="options-container">
             ${optionsHtml}
@@ -504,19 +799,20 @@ function showQuestion() {
         ${buttonsHtml}
     `;
 
-    document.getElementById('counter').innerText = `第 ${currentIndex + 1} / ${quizData.length} 题`;
-
-    // 如果这题已经答过了，立刻还原当时的界面（标记对错和显示解析）
-    if (history) {
-        restoreHistoryView(question, history);
+    // 如果有之前的选择，高亮显示
+    if (selectedAnswers.length > 0) {
+        const items = document.querySelectorAll('.option-item');
+        items.forEach(item => {
+            const dataKey = item.getAttribute('data-key');
+            if(selectedAnswers.includes(dataKey)) item.classList.add('selected');
+        });
     }
+
+    document.getElementById('counter').innerText = `第 ${currentIndex + 1} / ${quizData.length} 题`;
 }
 
 // 处理点击选项
 function handleSelect(val) {
-    // 如果已经答过这题，则禁止修改
-    if (questionHistory[currentIndex]) return;
-
     const question = quizData[currentIndex];
     const items = document.querySelectorAll('.option-item');
     
@@ -539,61 +835,21 @@ function handleSelect(val) {
             }
         });
     }
-}
 
-// 检查答案并保存状态
-function checkAnswer() {
-    if(selectedAnswers.length === 0) {
-        alert('请先选择答案');
-        return;
+    // 自动保存答案
+    if (selectedAnswers.length > 0) {
+        const userAnswer = selectedAnswers.sort().join('');
+        const isCorrect = userAnswer === question.ans;
+        questionHistory[currentIndex] = {
+            isCorrect: isCorrect,
+            selectedAnswers: [...selectedAnswers]
+        };
+        renderSidebar();
+    } else {
+        // 如果取消所有选择，清除记录
+        questionHistory[currentIndex] = null;
+        renderSidebar();
     }
-
-    const question = quizData[currentIndex];
-    const userAnswer = selectedAnswers.sort().join('');
-    const isCorrect = userAnswer === question.ans;
-
-    // 记录到历史状态中
-    questionHistory[currentIndex] = {
-        isCorrect: isCorrect,
-        selectedAnswers: [...selectedAnswers]
-    };
-
-    // 刷新左侧导航栏颜色
-    renderSidebar();
-
-    // 移除所有选项的 hover 选择反馈
-    const items = document.querySelectorAll('.option-item');
-    items.forEach(item => item.classList.remove('selectable'));
-
-    // 重新渲染当前题目状态
-    showQuestion();
-}
-
-// 还原已答题目的视图
-function restoreHistoryView(question, history) {
-    const items = document.querySelectorAll('.option-item');
-    items.forEach(item => {
-        const key = item.getAttribute('data-key');
-        
-        // 标记正确答案
-        if(question.ans.includes(key)) {
-            item.classList.add('correct');
-        } 
-        // 标记用户选错的答案
-        else if(history.selectedAnswers.includes(key)) {
-            item.classList.add('wrong');
-        }
-    });
-
-    const expBox = document.getElementById('explanation');
-    expBox.innerHTML = `
-        <strong style="color: ${history.isCorrect ? 'var(--success-color)' : 'var(--error-color)'}">
-            ${history.isCorrect ? '回答正确！' : '回答错误。'}
-        </strong><br>
-        正确答案是：<b>${question.ans}</b><br><br>
-        <strong>解析：</strong>${question.exp}
-    `;
-    expBox.style.display = 'block';
 }
 
 function finishQuiz() {
@@ -602,12 +858,29 @@ function finishQuiz() {
             return;
         }
     }
-    
+
+    const totalScore = window.currentScore || 0;
+    const totalPossibleScore = quizData.reduce((acc, q) => acc + (q.type === 'multi' ? 2 : 1), 0);
+    const passed = totalScore >= 5;    //及格分数线
+
     document.getElementById('quiz-area').style.display = 'none';
     document.getElementById('result-area').style.display = 'block';
-    document.getElementById('counter').innerText = '测验结束';
-    document.getElementById('correct-count').innerText = window.currentCorrect || 0;
-    document.getElementById('wrong-count').innerText = window.currentWrong || 0;
+    document.getElementById('counter').innerText = '考试结束';
+    document.getElementById('correct-count').innerText = totalScore;
+    document.getElementById('score-percent').innerText = totalPossibleScore;
+    
+    // 显示考生信息
+    document.getElementById('result-name').innerText = candidateName;
+    document.getElementById('result-id').innerText = candidateId;
+
+    const passStatus = document.getElementById('pass-status');
+    if (passed) {
+        passStatus.innerText = '🎉 恭喜！您已通过考试！';
+        passStatus.style.color = 'var(--success-color)';
+    } else {
+        passStatus.innerText = '❌ 很遗憾，您未通过考试（需要 5 分以上才能通过）';
+        passStatus.style.color = 'var(--error-color)';
+    }
 }
 
 // 初始化
