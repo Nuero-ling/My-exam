@@ -656,9 +656,9 @@ function selectQuestions() {
     const shuffledBooleans = shuffleArray(booleans);
 
     const selected = [
-        ...shuffledSingles.slice(0, 3),
-        ...shuffledMultis.slice(0, 1),
-        ...shuffledBooleans.slice(0, 2)
+        ...shuffledSingles.slice(0, 60),
+        ...shuffledMultis.slice(0, 5),
+        ...shuffledBooleans.slice(0, 30)
     ];
 
     return selected;
@@ -861,7 +861,7 @@ function finishQuiz() {
 
     const totalScore = window.currentScore || 0;
     const totalPossibleScore = quizData.reduce((acc, q) => acc + (q.type === 'multi' ? 2 : 1), 0);
-    const passed = totalScore >= 5;    //及格分数线
+    const passed = totalScore >= 90;    //及格分数线
 
     document.getElementById('quiz-area').style.display = 'none';
     document.getElementById('result-area').style.display = 'block';
@@ -878,7 +878,7 @@ function finishQuiz() {
         passStatus.innerText = '🎉 恭喜！您已通过考试！';
         passStatus.style.color = 'var(--success-color)';
     } else {
-        passStatus.innerText = '❌ 很遗憾，您未通过考试（需要 5 分以上才能通过）';
+        passStatus.innerText = '❌ 很遗憾，您未通过考试（需要 90 分以上才能通过）';
         passStatus.style.color = 'var(--error-color)';
     }
 }
