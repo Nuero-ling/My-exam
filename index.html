@@ -423,7 +423,9 @@
             <h2 id="result-title">考试完成！</h2>
             <div class="candidate-info">
                 考生姓名：<span id="result-name">-</span><br>
-                工号/身份证号：<span id="result-id">-</span>
+                工号/身份证号：<span id="result-id">-</span><br>
+                提交时间：<span id="result-time">-</span><br>
+                答题用时：<span id="result-duration">-</span>
             </div>
             <div class="stat-grid">
                 <div class="stat-item">
@@ -436,8 +438,15 @@
                 </div>
             </div>
             <div id="pass-status" style="font-size: 24px; font-weight: bold; margin: 20px 0;"></div>
-            <button class="btn" onclick="location.reload()">重新开始考试</button>
+        
+        <!-- 错题解析区域 -->
+        <div id="wrong-answers" style="margin-top: 30px; display: none;">
+            <h3 style="color: var(--error-color); margin-bottom: 15px;">📝 错题解析（最多显示前10条）</h3>
+            <div id="wrong-list" style="max-height: 400px; overflow-y: auto;"></div>
         </div>
+        
+        <button class="btn" onclick="location.reload()">重新开始考试</button>
+    </div>
     </div>
 </main>
 
@@ -445,6 +454,7 @@
 // 考生信息
 let candidateName = '';
 let candidateId = '';
+let examStartTime = null;
 
 // 开始考试
 function startExam() {
@@ -462,6 +472,7 @@ function startExam() {
     
     candidateName = name;
     candidateId = id;
+    examStartTime = new Date();
     
     document.getElementById('cover-page').style.display = 'none';
     initQuiz();
@@ -541,10 +552,10 @@ const allQuizData = [
     { type: 'single', q: '随车救援工具包括（ ）', options: {A:'备胎', B:'医药箱', C:'拖车绳、拖车杆、轮胎拆装工具、铁锹、搭电宝', D:'氧气瓶'}, ans: 'C', exp: '' },
     { type: 'single', q: '车间举升机使用前需要（ ）', options: {A:'直接操作', B:'已经点检可以正常使用', C:'工程师指挥下操作', D:'经过举升机使用培训后，使用前关注是否点检'}, ans: 'D', exp: '' },
     { type: 'single', q: '路试过程中，如遇路人招手乘车（ ）', options: {A:'停车聊天', B:'人情世故同意', C:'不予理会，遵守试验车辆严谨拉人规则', D:'让他和队长沟通'}, ans: 'C', exp: '' },
-    { type: 'single', q: '三高环境路试，路途中车队停车吃饭应该注意（ ）', options: {A:'随意选择', B:'路边停靠车辆', C:'队长评估环境是否安全，保密车辆执行好保密措施', D:'队长评估环境是否安全，保密车辆执行好保密措施'}, ans: 'C', exp: '' },
+    { type: 'single', q: '三高环境路试，路途中车队停车吃饭应该注意（ ）', options: {A:'随意选择', B:'路边停靠车辆', C:'队长评估环境是否安全，保密车辆执行好保密措施'}, ans: 'C', exp: '' },
     { type: 'single', q: '在高速公路上倒车、逆行、穿越中央隔离带调头，一次记几分？（ ）', options: {A:'3分', B:'6分', C:'9分', D:'12分'}, ans: 'A', exp: '' },
     { type: 'single', q: '驾驶机动车在雨天临时停车，应该开启什么灯？（ ）', options: {A:'前后雾灯', B:'危险报警闪光灯', C:'前大灯', D:'倒车灯'}, ans: 'B', exp: '' },
-    { type: 'single', q: '测试过程中，路过景区及游客较多路段正确做法（ ）', options: {A:'正常跟车', B:'加速通过', C:'拉开车距、超车需鸣笛提示', D:'拉开车距、超车需鸣笛提示'}, ans: 'C', exp: '' },
+    { type: 'single', q: '测试过程中，路过景区及游客较多路段正确做法（ ）', options: {A:'正常跟车', B:'加速通过', C:'拉开车距、超车需鸣笛提示'}, ans: 'C', exp: '' },
     { type: 'single', q: '问界高阶智驾系统官方名称是？（ ）', options: {A:'华为NIO', B:'华为乾崑ADS', C:'华为XNGP', D:'华为NOA'}, ans: 'B', exp: '' },
     { type: 'single', q: '车辆主动安全辅助功能AEB全称是？（ ）', options: {A:'车道保持', B:'盲区监测', C:'自适应巡航', D:'自动紧急制动'}, ans: 'D', exp: '' },
     { type: 'single', q: '高寒环境路试，制动距离易（ ）', options: {A:'缩短', B:'延长，因冰雪路面附着力低、轮胎抓地力下降', C:'不变', D:'随机变化'}, ans: 'B', exp: '' },
@@ -600,7 +611,7 @@ const allQuizData = [
     { type: 'boolean', q: '为了模拟用户场景，路试员可以随意驾驶车辆到随意路段进行测试。', ans: '×', exp: '' },
     { type: 'boolean', q: '正常行驶中，方向盘出现卡顿、跑偏，属于安全风险，需谨慎驾驶。', ans: '√', exp: '' },
     { type: 'boolean', q: '试验路线应避开连续长上坡、急弯路段，避免电机过载。', ans: '√', exp: '' },
-    { type: 'boolean', q: '倒车时，倒车影响出现卡顿、黑屏，会影响倒车安全，属于功能故障。', ans: '√', exp: '' },
+    { type: 'boolean', q: '倒车时，倒车影像出现卡顿、黑屏，会影响倒车安全，属于功能故障。', ans: '√', exp: '' },
     { type: 'boolean', q: '早班、晚班交接班时，主要是交还车辆钥匙。', ans: '×', exp: '' },
     { type: 'boolean', q: '开展班前会和周例会主要是应付工作，可以不用理会。', ans: '×', exp: '' },
     { type: 'boolean', q: '三方公司管理要求不严格，可以随意旷工。', ans: '×', exp: '' },
@@ -872,6 +883,28 @@ function finishQuiz() {
     // 显示考生信息
     document.getElementById('result-name').innerText = candidateName;
     document.getElementById('result-id').innerText = candidateId;
+    
+    // 显示提交时间
+    const examEndTime = new Date();
+    const timeStr = examEndTime.toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    document.getElementById('result-time').innerText = timeStr;
+    
+    // 计算并显示答题用时
+    if (examStartTime) {
+        const duration = examEndTime - examStartTime;
+        const minutes = Math.floor(duration / 60000);
+        const seconds = Math.floor((duration % 60000) / 1000);
+        document.getElementById('result-duration').innerText = `${minutes}分${seconds}秒`;
+    } else {
+        document.getElementById('result-duration').innerText = '无法计算';
+    }
 
     const passStatus = document.getElementById('pass-status');
     if (passed) {
@@ -881,6 +914,103 @@ function finishQuiz() {
         passStatus.innerText = '❌ 很遗憾，您未通过考试（需要 90 分以上才能通过）';
         passStatus.style.color = 'var(--error-color)';
     }
+
+    // 生成错题解析
+    showWrongAnswers();
+}
+
+// 显示错题解析
+function showWrongAnswers() {
+    const wrongList = document.getElementById('wrong-list');
+    const wrongAnswersDiv = document.getElementById('wrong-answers');
+    wrongList.innerHTML = '';
+    
+    const wrongQuestions = [];
+    
+    quizData.forEach((question, index) => {
+        const history = questionHistory[index];
+        if (history && !history.isCorrect) {
+            wrongQuestions.push({
+                index: index + 1,
+                question: question,
+                selectedAnswer: history.selectedAnswers.join(', ') || '未作答',
+                correctAnswer: question.ans
+            });
+        }
+    });
+    
+    if (wrongQuestions.length === 0) {
+        wrongAnswersDiv.style.display = 'none';
+        return;
+    }
+    
+    // 最多显示前10条
+    const displayQuestions = wrongQuestions.slice(0, 10);
+    
+    displayQuestions.forEach(item => {
+        const typeText = item.question.type === 'single' ? '单选题' : 
+                         item.question.type === 'boolean' ? '判断题' : '多选题';
+        
+        const itemDiv = document.createElement('div');
+        itemDiv.style.cssText = `
+            background: #fff5f5;
+            border-left: 4px solid var(--error-color);
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 0 8px 8px 0;
+            text-align: left;
+        `;
+        
+        // 生成选项列表（判断题除外）
+        let optionsHtml = '';
+        if (item.question.type !== 'boolean' && item.question.options) {
+            optionsHtml = '<div style="margin-bottom: 8px; font-size: 14px; text-align: left;"><strong>选项：</strong><br>';
+            Object.keys(item.question.options).forEach(key => {
+                let optionStyle = '';
+                if (item.correctAnswer.includes(key)) {
+                    optionStyle = 'background: #dcfce7; color: #16a34a; padding: 2px 6px; border-radius: 4px;';
+                } else if (item.selectedAnswer.includes(key)) {
+                    optionStyle = 'background: #fee2e2; color: #dc2626; padding: 2px 6px; border-radius: 4px;';
+                }
+                optionsHtml += `<span style="${optionStyle}; display: block; margin-bottom: 4px;">${key}. ${item.question.options[key]}</span>`;
+            });
+            optionsHtml += '</div>';
+        }
+        
+        itemDiv.innerHTML = `
+            <div style="font-weight: bold; color: var(--error-color); margin-bottom: 8px; text-align: left;">
+                第${item.index}题（${typeText}）
+            </div>
+            <div style="margin-bottom: 8px; text-align: left;">
+                <strong>题目：</strong>${item.question.q}
+            </div>
+            ${optionsHtml}
+            <div style="text-align: left;">
+                <div style="color: #dc2626; margin-bottom: 4px; font-size: 14px;">
+                    <strong>您的答案：</strong>${item.selectedAnswer}
+                </div>
+                <div style="color: #16a34a; font-size: 14px;">
+                    <strong>正确答案：</strong>${item.correctAnswer}
+                </div>
+            </div>
+        `;
+        
+        wrongList.appendChild(itemDiv);
+    });
+    
+    if (wrongQuestions.length > 10) {
+        const moreDiv = document.createElement('div');
+        moreDiv.style.cssText = `
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 14px;
+            margin-top: 10px;
+        `;
+        moreDiv.innerText = `... 还有 ${wrongQuestions.length - 10} 道错题未显示`;
+        wrongList.appendChild(moreDiv);
+    }
+    
+    wrongAnswersDiv.style.display = 'block';
 }
 
 // 初始化
